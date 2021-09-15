@@ -78,24 +78,38 @@ const getPackageId = () => {
     return Math.round(Math.random() * (packages.length - 1));
 }
 
+const refProfitCoefs = [
+    0.1,
+    0.08,
+    0.06,
+    0.03,
+    0.02,
+    0.02,
+    0.02,
+    0.01,
+    0.01
+];
+
 let users = [];
 
 class User {
     constructor (parent) {
         this.properties = {
-            purchaseCount: 0,
-            purchaseAmount: 0,
+            purchasesCount: 0,
+            moneySpent: 0,
             tokenCount: 0,
             refferalCount: 0,
             parentRef: parent,
-            packages: []
+            packages: [],
+            moneyProfit: 0,
+            tokenProfit: 0
         }
     }
 
     buyPackage(currentPack) {        
-        this.properties.purchaseCount++;        
+        this.properties.purchasesCount++;        
         this.properties.packages.push(currentPack);
-        this.properties.purchaseAmount += currentPack.properties.price;
+        this.properties.moneySpent += currentPack.properties.price;
         const purchasedTokens = currentPack.properties.price / tokenPrice
         this.properties.tokenCount += purchasedTokens;
         totalTokensRemain -= purchasedTokens;
@@ -169,27 +183,71 @@ const emulateCycle = (newMainUsersCount) => {
         })
     }
 
-    const accrueProfit = () => {
+    const accruePackProfit = () => {
+        
         users.forEach((user) => {
             user.properties.packages.forEach((package) => {
-                let tokenProfit = (package.properties.price * package.properties.profitRate) / tokenPrice;                
+                const moneyProfit = package.properties.price * package.properties.profitRate;
+                // user.properties.moneyProfit += moneyProfit; 
+                const tokenProfit = moneyProfit / tokenPrice;
                 user.properties.tokenCount += tokenProfit;
+                user.properties.tokenProfit += tokenProfit;
+                
                 totalTokenPaidProfit += tokenProfit;
-                totalTokensRemain -= tokenProfit
+                totalTokensRemain -= tokenProfit;
                 // console.log(profit);
+                
             })
             
         })
     }
+        
+    const accrueRefProfit = () => {
+        const accrueRefToParent = (user, moneyProfit, coefIndex = 0 ) => {
+            console.log(coefIndex);
+            console.log(refProfitCoefs[coefIndex]);
+            console.log(user.properties.parentRef);
+            if (!user.properties.parentRef || !refProfitCoefs[coefIndex]) {
+                return;
+            } else {
+                console.log('refProfitFrom = ' + moneyProfit);                
+                // parent.properties.moneyProfit += user.properties.tokenProfit * tokenPrice * refProfitCoefs[coefIndex];
+                const parent = user.properties.parentRef;
+                parent.properties.moneyProfit += moneyProfit * refProfitCoefs[coefIndex];                                
+                
+                accrueRefToParent(parent, moneyProfit, coefIndex + 1);
+            }           
+        }
+        users.forEach((user) => {
+            // const moneyProfit = user.properties.tokenProfit * tokenPrice;
+            accrueRefToParent(user, user.properties.moneySpent);
+        })        
+    }
+
+    const allUsersInviteFriend = () => {
+        users.forEach((user) => {
+            user.inviteFriend();
+        })
+    }
 
     addMainUsers(newMainUsersCount);
+    for (let i = 0; i < 9; i++) {
+        let lastUser = users[users.length - 1];
+        lastUser.inviteFriend();
+        // allUsersInviteFriend();
+    }
+    
     allUsersBuyAllPacks();
     // console.log(users[0].properties.tokenCount);
-    accrueProfit();
+    accruePackProfit();
+    accrueRefProfit();
     // console.log(users[0].properties.tokenCount);    
 }
 
-emulateCycle(500);
+emulateCycle(1);
+//create different scenarios for convinient usage
+//scenario = [func, func, func.bind(arg)]
+//scenario.forEach((step) => {step()})
 
 console.log('globalPackCoef = ' + globalPackCoef);
 console.log('tokenPrice = ' + new Intl.NumberFormat('ru-RU').format(tokenPrice.toFixed(2)));
