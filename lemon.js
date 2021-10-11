@@ -57,9 +57,9 @@ const packages = [
     new Package(40, 0.5, 0.128, 0.2),
     new Package(80, 1, 0.142, 0.25),
     new Package(160, 1, 0.156, 0.3),
-    new Package(320, 1, 0.17, 0.35),
-    new Package(640, 1, 0.184, 0.4),
-    new Package(1280, 1, 0.198, 0.45)
+    // new Package(320, 1, 0.17, 0.35),
+    // new Package(640, 1, 0.184, 0.4),
+    // new Package(1280, 1, 0.198, 0.45)
 ];
 
 // for (let i = 0; i < 8; i++) {
@@ -129,7 +129,7 @@ class User {
         this.properties.purchasesCount++;        
         this.properties.packages.push(currentPack);
         this.properties.moneySpent += packPrice;
-        const purchasedTokens = packPrice / tokenPrice
+        const purchasedTokens = packPrice / tokenPrice;
         this.properties.tokenAmount += purchasedTokens;
         this.properties.internalSwap += purchasedTokens * currentPack.properties.swapCoef;
         this.properties.frozenTokens += purchasedTokens * currentPack.properties.freezeCoef;
@@ -277,12 +277,15 @@ const allUsersInviteFriend = () => {
 // console.log(users[0].properties.tokenAmount);    
 
 
-const addMainUsers = (newMainUsersCount, boostChance) => {
+const addMainUsers = (newMainUsersCount, boostedUsersGoal) => {
     let user;
     for (let i = 0; i < newMainUsersCount; i++) {
         user = new User(null);
         users.push(user);
-        if (!!(Math.round(Math.random() - (0.5 - boostChance)))) {
+        
+        // if (!!(Math.round(Math.random() - (0.5 - boostChance)))) {
+        if (boostedUsers.length <= boostedUsersGoal) {
+            
             user.properties.boost = true;
             boostedUsers.push(user);
         }
@@ -421,7 +424,8 @@ class Cycle {
             // const round = this.properties.even ? Math.floor : Math.ceil;
             const newUsersCountToday = Math.round(goal.targetUserCount / goal.period);
             // this.properties.even = !this.properties.even;
-            day.addAction(addMainUsers.bind(null, newUsersCountToday, goal.boostChance));
+            const boostedUsersGoal = Math.round(newUsersCountToday * goal.boostChance);
+            day.addAction(addMainUsers.bind(null, newUsersCountToday, boostedUsersGoal));
             this.properties.scheduledUsersCount += newUsersCountToday;
 
             
@@ -457,7 +461,7 @@ class Cycle {
 const goal = {
     targetUserCount: 500,
     period: 30,
-    boostChance: 1
+    boostChance: 0.25
 }
 const test = new Test(goal);
 test.run();
