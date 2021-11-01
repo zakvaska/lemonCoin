@@ -58,16 +58,16 @@ const actionTemplates = [
 ]
 
 const goal = {
-    userCount: 1
+    // userCount: 1
     // cyclesCount: 2
-    // moneyEarned: 20000000
+    moneyEarned: 20000000
 }
 const options = {
     period: 30,
     boostChance: 0,
     mode: 'instant',
     cycles: 1,
-    newUsersPerCycle: 10,
+    newUsersPerCycle: 1000,
     actionTemplates: actionTemplates
 }
 const test = new Test(goal, options);
