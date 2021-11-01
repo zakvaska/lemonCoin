@@ -150,9 +150,10 @@ const getActions = (options) => {
 }
 
 const getSwapTotal = () => {
-    let total;
+    let total = 0;
     users.forEach((user) => {
         total += user.properties.internalSwap;
     });
+    // console.log(total);
     return total;
 }
