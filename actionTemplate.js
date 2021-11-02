@@ -16,7 +16,11 @@ class ActionTemplate {
             // }
             // return bindedFunction;
             this.parmNames.forEach((parmName, index) => {
-                this.parmValues[index] = globalOptions[parmName];
+                if (typeof globalOptions[parmName] ==='function') {
+                    this.parmValues[index] = globalOptions[parmName]();
+                } else {
+                    this.parmValues[index] = globalOptions[parmName];
+                }
             });
             // console.log(this.parmNames);
             return entity[this.actionName].bind(null, ...this.parmValues);

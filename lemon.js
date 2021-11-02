@@ -62,14 +62,20 @@ const goal = {
     // cyclesCount: 2
     moneyEarned: 20000000
 }
+const getNewUsersCount = () => {
+    return currentOptions.startNewUsersCount + currentOptions.newUsersGrowthIncrease * currentCycle.properties.index;
+}
 const options = {
     period: 30,
     boostChance: 0,
     mode: 'instant',
     cycles: 1,
-    newUsersPerCycle: 1000,
+    newUsersPerCycle: getNewUsersCount,
+    startNewUsersCount: 500,
+    newUsersGrowthIncrease: 100,
     actionTemplates: actionTemplates
 }
+currentOptions = options;
 const test = new Test(goal, options);
 currentTest = test;
 const start = new Date();

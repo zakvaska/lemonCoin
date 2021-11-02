@@ -18,6 +18,7 @@ let totalTokensRemain = startTokenCount;
 var currentTest;
 var currentCycle;
 var currentDay;
+var currentOptions;
 
 let lastID = 0;
 
