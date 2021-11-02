@@ -69,6 +69,7 @@ class Cycle {
         this.properties.tokensSoldEnd = totalTokensSold;
         this.properties.tokensSold = this.properties.tokensSoldEnd - this.properties.tokensSoldStart;
         this.properties.internalSwapEnd = getSwapTotal();
+        this.properties.internalSwapDiff = this.properties.internalSwapEnd - this.properties.internalSwapStart;
         if (isFirstCycle) isFirstCycle = false;
         return this;
     }
