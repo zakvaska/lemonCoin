@@ -4,7 +4,8 @@ class Package {
             price: price,
             iterationCoef: iterationCoef,
             profitRate: profitRate,
-            isActive: true,
+            canBeBought: true,
+            affectsThePrice: true,
             swapCoef: swapCoef,
             burnCoef: 1 - swapCoef,
             redeemFromSwap: redeemFromSwap

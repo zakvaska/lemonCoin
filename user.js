@@ -54,7 +54,7 @@ class User {
         globalMoneyBank += tokensFromSystem * tokenPrice;
         globalTransCount++;
         globalTokensSold += tokensFromSystem;
-        globalIterationCoef += currentPack.properties.iterationCoef;
+        if (currentPack.properties.affectsThePrice) globalIterationCoef += currentPack.properties.iterationCoef;
         
         // console.log('purchase!');
         checkCoef();
@@ -70,7 +70,7 @@ class User {
     //with progression
     buyAllPacks() {
         packages.forEach((pack) => {
-            if (pack.properties.isActive) {
+            if (pack.properties.canBeBought) {
                 this.buyPackage(pack);
             }     
         });              

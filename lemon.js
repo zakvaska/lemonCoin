@@ -73,8 +73,14 @@ const options = {
     newUsersPerCycle: getNewUsersCount,
     startNewUsersCount: 500,
     newUsersGrowthIncrease: 100,
-    actionTemplates: actionTemplates
+    actionTemplates: actionTemplates,
+    breakPoints: [
+        0.015, 
+        0.025, 
+        // 0.035
+    ]
 }
+console.log(options);
 currentOptions = options;
 const test = new Test(goal, options);
 currentTest = test;

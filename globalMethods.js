@@ -1,14 +1,24 @@
 const levelUp = () => {
-    const deactivatePack = (packageId) => {
-        packages[packageId].properties.isActive = false;
+    const putAway = (packageId) => {
+        packages[packageId].properties.canBeBought = false;
+    }
+
+    const disablePack = (package) => {
+        package.properties.affectsThePrice = false;
     }
 
     stages.push(new Stage(globalTransCount, globalTokensSold, tokenPrice));        
     // if (stages.length <= 3) {
     //     // console.log(stages.length - 1);
-    //     deactivatePack(stages.length - 1);            
+    //     putAway(stages.length - 1);            
     // }
     // console.log('new stage!');
+    currentOptions.breakPoints.forEach((breakPoint, index, array) => {
+        if ((Math.round(tokenPrice * 1000) / 1000) === breakPoint) {
+            disablePack(packages[index]);
+            // array.shift();
+        }
+    });
 }
 
 const checkCoef = () => {

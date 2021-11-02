@@ -84,7 +84,9 @@ class Cycle {
     }
 
     cycleNewUsersBuyAllPacks = () => {
-        // console.log('cycleNewUsers ' + this.properties.users.length + ' BuyAllPacks ' + packages.length);                                                                                                                                                                        
+        // console.log('cycleNewUsers ' + this.properties.users.length + ' BuyAllPacks ' + packages.length);    
+        // console.log(this.properties.users[0]);
+        // this.properties.users[0].buyAllPacks();
         this.properties.users.forEach((user) => {
             user.buyAllPacks();
         })
