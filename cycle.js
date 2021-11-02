@@ -70,7 +70,7 @@ class Cycle {
         this.properties.tokensSold = this.properties.tokensSoldEnd - this.properties.tokensSoldStart;
         this.properties.internalSwapEnd = getSwapTotal();
         this.properties.internalSwapDiff = this.properties.internalSwapEnd - this.properties.internalSwapStart;
-        this.properties.totalUsersCount = user.length;
+        this.properties.totalUsersCount = users.length;
         if (isFirstCycle) isFirstCycle = false;
         return this;
     }
