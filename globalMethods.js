@@ -167,3 +167,12 @@ const getSwapTotal = () => {
     // console.log(total);
     return total;
 }
+
+const getBurnTotal = () => {
+    let total = 0;
+    users.forEach((user) => {
+        total += user.properties.tokensToBurn;
+    });
+    // console.log(total);
+    return total;
+}

@@ -59,6 +59,7 @@ class Cycle {
         this.properties.startTokenPrice = tokenPrice;
         this.properties.tokensSoldStart = totalTokensSold;
         this.properties.internalSwapStart = getSwapTotal();
+        this.properties.tokensToBurnStart = getBurnTotal();
         return this;
     }
 
@@ -70,6 +71,8 @@ class Cycle {
         this.properties.tokensSold = this.properties.tokensSoldEnd - this.properties.tokensSoldStart;
         this.properties.internalSwapEnd = getSwapTotal();
         this.properties.internalSwapDiff = this.properties.internalSwapEnd - this.properties.internalSwapStart;
+        this.properties.tokensToBurnEnd = getBurnTotal();
+        this.properties.tokensToBurnDiff = this.properties.tokensToBurnEnd - this.properties.tokensToBurnStart;
         this.properties.totalUsersCount = users.length;
         if (isFirstCycle) isFirstCycle = false;
         return this;
