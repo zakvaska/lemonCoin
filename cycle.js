@@ -92,6 +92,7 @@ class Cycle {
         // this.properties.users[0].buyAllPacks();
         this.properties.users.forEach((user) => {
             user.buyAllPacks();
-        })
+        });
+        this.properties.queueSize = queue.size;
     }
 }
