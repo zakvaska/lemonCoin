@@ -112,13 +112,13 @@ const accruePackProfit = (user) => {
     user.properties.packages.forEach((package, index, array) => {
         if (!package.isPaidOut) {
             // console.log('accruePackProfitToUser');
-            const moneyProfit = package.origin.properties.price * package.origin.properties.profitRate;
-            // user.properties.moneyProfit += moneyProfit; 
-            let unlockedTokens = moneyProfit / tokenPrice;
-            if (user.properties.lockedTokens < unlockedTokens) unlockedTokens = user.properties.lockedTokens;
-            // user.properties.tokensToRedeem += tokenProfit;
-            user.properties.lockedTokens -= unlockedTokens;
+            // const moneyProfit = package.origin.properties.price * package.origin.properties.profitRate;
+            // let unlockedTokens = moneyProfit / tokenPrice;
+            let unlockedTokens = package.purchasedTokens * package.origin.properties.profitRate;
+            if (package.lockedTokens < unlockedTokens) unlockedTokens = package.lockedTokens;
             package.lockedTokens -= unlockedTokens;
+            // if (user.properties.lockedTokens < unlockedTokens) unlockedTokens = user.properties.lockedTokens;
+            user.properties.lockedTokens -= unlockedTokens;
             user.properties.unlockedTokens += unlockedTokens;
             user.properties.internalSwap += unlockedTokens * package.origin.properties.swapCoef;
             user.properties.tokensToBurn += unlockedTokens * package.origin.properties.burnCoef;

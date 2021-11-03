@@ -59,6 +59,7 @@ const getRandomPackageId = () => {
 class UserPackage {
     constructor(pack, lockedTokens) {
         this.origin = pack;
+        this.purchasedTokens = lockedTokens;
         this.lockedTokens = lockedTokens;
         this.isPaidOut = false;
     }
