@@ -98,7 +98,7 @@ Test.prototype.checkRestrictions = function(goal) {
         // console.log(this.properties[key].target);
         // console.log(this.properties[key].current);
         if (this.properties.goal[key] <= this.properties.current[key] && this.properties.goal[key]){
-            console.log(`goal ${key} has been riched with value ${this.properties.current[key]}`);
+            console.log(`goal ${key} has been reached with value ${this.properties.current[key]}`);
             return false;
         } 
         if (this.properties.current[key] === 0) {

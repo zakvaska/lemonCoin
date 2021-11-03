@@ -8,7 +8,7 @@ class Stage {
     totalPackPurchases += globalTransCount;
     // globalTokensSold += tokensSold;
     tokenPrice += step;
-    // globalIterationCoef = 0;
+    globalIterationCoef = 0;
     // globalTransCount = 0;
     // stageTokensSold = 0;
     lastStageTokensSold = globalTokensSold;

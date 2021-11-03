@@ -59,7 +59,7 @@ const actionTemplates = [
 
 const goal = {
     // userCount: 1
-    // cyclesCount: 2
+    // cyclesCount: 1,
     moneyEarned: 20000000,
     tokensSold: startTokenCount
 }
@@ -92,9 +92,13 @@ const options = {
         // 0.035
     ]
 }
-options.newUsersPerCycle.parms.values.forEach(value => {
-    returnedValues[value] = 0;
-});
+
+if (options.newUsersPerCycle.parms.mode && options.newUsersPerCycle.parms.mode === 'random') {
+    options.newUsersPerCycle.parms.values.forEach(value => {
+        returnedValues[value] = 0;
+    });
+}
+
 console.log(options);
 currentOptions = options;
 const test = new Test(goal, options);
