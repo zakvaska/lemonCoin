@@ -35,25 +35,26 @@ class User {
         let tokensFromSystem = 0;
         if (isFirstCycle) {
             tokensFromSystem = purchasedTokens;
-            totalTokensRemain -= tokensFromSystem;
             registerTransaction(system, this, tokensFromSystem, 'token', 'issue');
         } else {
             tokensFromSystem = purchasedTokens * (1 - currentPack.properties.redeemFromSwap);
-            totalTokensRemain -= tokensFromSystem;
             registerTransaction(system, this, tokensFromSystem, 'token', 'partialIssue');
             const diff = redeemTokensFromSwap(purchasedTokens * currentPack.properties.redeemFromSwap, this);
             //internal swap summary is not enough to supplement package purchase
             if (diff > 0) {
-                globalTokensSold += diff;
-                totalTokensRemain -= diff;
+                tokensFromSystem += diff;
                 registerTransaction(system, this, diff, 'token', 'redemptionCompensation');
             }
         }
 
-        currentTest.properties.current.moneyEarned += tokensFromSystem * tokenPrice;
         globalMoneyBank += tokensFromSystem * tokenPrice;
         globalTransCount++;
         globalTokensSold += tokensFromSystem;
+        totalTokensRemain -= tokensFromSystem;
+
+        currentTest.properties.current.moneyEarned += tokensFromSystem * tokenPrice;
+        currentTest.properties.current.tokensSold = globalTokensSold;
+        
         if (currentPack.properties.affectsThePrice) globalIterationCoef += currentPack.properties.iterationCoef;
         
         // console.log('purchase!');

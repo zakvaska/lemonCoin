@@ -30,7 +30,8 @@ class Test {
             current: {
                 userCount: 0,
                 cyclesCount: 0,
-                moneyEarned: 0
+                moneyEarned: 0,
+                tokensSold: 0
             },
             goal: goal,
             options: options
@@ -96,9 +97,12 @@ Test.prototype.checkRestrictions = function(goal) {
     for (let key in goal) {
         // console.log(this.properties[key].target);
         // console.log(this.properties[key].current);
-        if (this.properties.goal[key] <= this.properties.current[key] && this.properties.goal[key]) return false;
+        if (this.properties.goal[key] <= this.properties.current[key] && this.properties.goal[key]){
+            console.log(`goal ${key} has been riched with value ${this.properties.current[key]}`);
+            return false;
+        } 
         if (this.properties.current[key] === 0) {
-            console.error('current value did not change!');
+            console.error(`current value (${key}) did not change!`);
             return false;
         } 
     }

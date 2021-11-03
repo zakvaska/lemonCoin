@@ -7,7 +7,7 @@ const levelUp = () => {
         package.properties.affectsThePrice = false;
     }
 
-    stages.push(new Stage(globalTransCount, globalTokensSold, tokenPrice));        
+    stages.push(new Stage());        
     // if (stages.length <= 3) {
     //     // console.log(stages.length - 1);
     //     putAway(stages.length - 1);            
@@ -139,14 +139,14 @@ const accruePackProfit = (user) => {
     if (user.properties.internalSwap) queue.add(user);   
 }
 
-const compliance = {
-    userCount: addMainUsers
-}
+// const compliance = {
+//     userCount: addMainUsers
+// }
 
-const getAction = (actionTemplate, options) => {
-    // return compliance[parameter].bind(null, value);
-    return actionTemplate.createAction(options);
-}
+// const getAction = (actionTemplate, options) => {
+//     // return compliance[parameter].bind(null, value);
+//     return actionTemplate.createAction();
+// }
 
 const getActions = (options) => {
     const actions = [];
@@ -154,7 +154,7 @@ const getActions = (options) => {
     //     actions.push(getAction(key, goal[key]));
     // }
     options.actionTemplates.forEach(actionTemplate => {
-        actions.push(getAction(actionTemplate, options));
+        actions.push(actionTemplate.createAction());
     });
     return actions;
 }
@@ -175,4 +175,25 @@ const getBurnTotal = () => {
     });
     // console.log(total);
     return total;
+}
+
+const getNewUsersCount = (parms) => {
+    switch (parms.mode) {
+        case 'ariphmetic':
+            // console.log(parms.mode);
+            return parms.startNewUsersCount + parms.newUsersGrowthIncrease * currentCycle.properties.index;
+            // break;
+        case 'random':
+            const valuesCount = parms.values.length;
+            const randomValue = Math.random();
+            const valueRandomIndex = randomValue === 1 ?
+            parms.values.length - 1 :
+            Math.round((randomValue * valuesCount) - 0.5);
+            
+            returnedValues[parms.values[valueRandomIndex]]++;
+            
+            return parms.values[valueRandomIndex];
+        default:
+            return parms.startNewUsersCount;
+    }
 }

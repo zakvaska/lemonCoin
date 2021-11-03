@@ -52,28 +52,39 @@ const allUsersInviteFriend = () => {
 // console.log(users[0].properties.tokenAmount);    
 
 const actionTemplates = [
-    new ActionTemplate({entityName: '', actionName: 'addMainUsers', areParmsNedeed: true, parmNames: ['newUsersPerCycle']}),
-    new ActionTemplate({entityName: 'currentCycle', actionName: 'cycleNewUsersBuyAllPacks', areParmsNedeed: false, parmNames: []})
-    // new ActionTemplate({entityName: '', actionName: 'accruePackProfitToAll', areParmsNedeed: false, parmNames: []})
+    new ActionTemplate({entityName: '', actionName: 'addMainUsers', parmNames: ['newUsersPerCycle']}),
+    new ActionTemplate({entityName: 'currentCycle', actionName: 'cycleNewUsersBuyAllPacks', parmNames: []})
+    // new ActionTemplate({entityName: '', actionName: 'accruePackProfitToAll', parmNames: []})
 ]
 
 const goal = {
     // userCount: 1
     // cyclesCount: 2
-    moneyEarned: 20000000
+    moneyEarned: 20000000,
+    tokensSold: startTokenCount
 }
-const getNewUsersCount = () => {
-    return currentOptions.startNewUsersCount + currentOptions.newUsersGrowthIncrease * currentCycle.properties.index;
-}
+
 const options = {
     period: 30,
     boostChance: 0,
     mode: 'instant',
     cycles: 1,
     // newUsersPerCycle: getNewUsersCount,
-    newUsersPerCycle: 500,
-    startNewUsersCount: 500,
-    newUsersGrowthIncrease: 100,
+    // newUsersPerCycle: 500,
+    // startNewUsersCount: 500,
+    // newUsersGrowthIncrease: 100,
+    newUsersPerCycle: {
+        value: getNewUsersCount,
+        parms: {
+            startNewUsersCount: 500,
+
+            // mode: 'ariphmetic',
+            // newUsersGrowthIncrease: 100,
+
+            mode: 'random',
+            values: [500, 600, 700],
+        }
+    },
     actionTemplates: actionTemplates,
     breakPoints: [
         0.015, 
@@ -81,6 +92,9 @@ const options = {
         // 0.035
     ]
 }
+options.newUsersPerCycle.parms.values.forEach(value => {
+    returnedValues[value] = 0;
+});
 console.log(options);
 currentOptions = options;
 const test = new Test(goal, options);
@@ -88,6 +102,7 @@ currentTest = test;
 const start = new Date();
 test.run();
 console.log(test);
+console.log(returnedValues);
 
 /*check reedemTokens*/
 // const user1 = new User(null);

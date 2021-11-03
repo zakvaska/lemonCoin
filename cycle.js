@@ -57,7 +57,7 @@ class Cycle {
     openCycle = () => {
         this.properties.status = 'open';
         this.properties.startTokenPrice = tokenPrice;
-        this.properties.tokensSoldStart = totalTokensSold;
+        this.properties.tokensSoldStart = globalTokensSold;
         this.properties.internalSwapStart = getSwapTotal();
         this.properties.tokensToBurnStart = getBurnTotal();
         return this;
@@ -67,7 +67,7 @@ class Cycle {
         accruePackProfitToAll();
         this.properties.status = 'closed';
         this.properties.endTokenPrice = tokenPrice;
-        this.properties.tokensSoldEnd = totalTokensSold;
+        this.properties.tokensSoldEnd = globalTokensSold;
         this.properties.tokensSold = this.properties.tokensSoldEnd - this.properties.tokensSoldStart;
         this.properties.internalSwapEnd = getSwapTotal();
         this.properties.internalSwapDiff = this.properties.internalSwapEnd - this.properties.internalSwapStart;

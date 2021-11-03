@@ -1,7 +1,7 @@
 const step = 0.001;
 let tokenPrice = 0.01;
 const split = 1000;
-const startTokenCount = 80000000;
+const startTokenCount = 100000000;
 let globalMoneyBank = 0;
 // let totalPackagesSold = 0;
 let globalIterationCoef = 0;
@@ -9,7 +9,8 @@ let globalTransCount = 0;
 let globalTokensSold = 0;
 
 let totalPackPurchases = 0;
-let totalTokensSold = 0;
+// let stageTokensSold = 0;
+let lastStageTokensSold = 0;
 
 // let totalTokenPaidProfit = 0;
 
@@ -54,3 +55,5 @@ const system = new System();
 //         transactionHistory: []
 //     }
 // }
+
+const returnedValues = {};
