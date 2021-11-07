@@ -1,6 +1,6 @@
 const step = 0.001;
 let tokenPrice = 0.01;
-const split = 1000;
+const split = 100;
 const startTokenCount = 100000000;
 let globalMoneyBank = 0;
 // let totalPackagesSold = 0;

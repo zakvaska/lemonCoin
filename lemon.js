@@ -59,8 +59,8 @@ const actionTemplates = [
 
 const goal = {
     // userCount: 1
-    // cyclesCount: 1,
-    moneyEarned: 20000000,
+    // cyclesCount: 2
+    moneyEarned: 100000000,
     tokensSold: startTokenCount
 }
 
@@ -80,25 +80,22 @@ const options = {
 
             // mode: 'ariphmetic',
             // newUsersGrowthIncrease: 100,
-
+            // рандом пользователей на каждый цикл, одинаковая вероятность;  
             mode: 'random',
-            values: [500, 600, 700],
+            values: [500],
         }
     },
     actionTemplates: actionTemplates,
     breakPoints: [
         0.015, 
         0.025, 
-        // 0.035
+        0.035,
+       // 0.05
     ]
 }
-
-if (options.newUsersPerCycle.parms.mode && options.newUsersPerCycle.parms.mode === 'random') {
-    options.newUsersPerCycle.parms.values.forEach(value => {
-        returnedValues[value] = 0;
-    });
-}
-
+options.newUsersPerCycle.parms.values.forEach(value => {
+    returnedValues[value] = 0;
+});
 console.log(options);
 currentOptions = options;
 const test = new Test(goal, options);
