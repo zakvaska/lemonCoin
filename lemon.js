@@ -14,8 +14,11 @@ console.log(packages);
 
 const packageSets = new Object();
 let i;
+let accumulator = 0;
 packages.forEach((package, index, array) => {
-    packageSets[package.properties.price] = array.filter((item) => item.properties.price <= package.properties.price);
+    accumulator += package.properties.price;
+    // console.log(accumulator);
+    packageSets[accumulator] = array.filter((item) => item.properties.price <= package.properties.price);
 });
 // const newpackageSets = packages.reduce((accumulator, currentValue, index, array) => {
 //     accumulator[currentValue.properties.price] = array.filter((item) => item.properties.price <= currentValue.properties.price);
@@ -35,6 +38,7 @@ step = 0.001;
 tokenPrice = 0.01;
 split = 1000;
 startTokenCount = 100000000;
+totalTokensRemain = startTokenCount;
 
 const goal = {
     // userCount: 1000,
@@ -61,7 +65,7 @@ const options = {
             values: [500, 600, 700],
         }
     },
-    packageSets: [10, 20, 40],
+    packageSets: [10, 30, 70],
     actionTemplates: actionTemplates,
     onPriceChangeListeners: [
         // new ChangeListener(eventTypes.price, 0.011, activatePackage, 640),

@@ -15,7 +15,7 @@ let lastStageTokensSold = 0;
 
 // let totalTokenPaidProfit = 0;
 
-let totalTokensRemain = startTokenCount;
+var totalTokensRemain;
 
 var currentTest;
 var currentCycle;
