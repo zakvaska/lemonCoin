@@ -1,64 +1,43 @@
 
-const allUsersBuyAllPacks = () => {
-    users.forEach((user) => {
-        // user.buyRandPackage();
-        user.buyAllPacks();
-        // user.inviteFriend();
-        // console.log(users); 
-    })
-}
+// constructor(price, iterationCoef, profitRate, swapCoef, redeemFromSwap, canBeBought, bonus)
+// packages.push(new Package(10, 0.2, 0.24, 0.1, 0.3, true, 0.7));
+packages.push(new Package(10, 0.2, 0.24, 0.1, 0.3, true));
+packages.push(new Package(20, 0.3, 0.24, 0.15, 0.3, true));
+packages.push(new Package(40, 0.5, 0.24, 0.2, 0.3, true));
+packages.push(new Package(80, 1, 0.24, 0.25, 0.3, true));
+packages.push(new Package(160, 1, 0.24, 0.3, 0.3, true));
+packages.push(new Package(320, 1, 0.24, 0.35, 0.3, true));
+packages.push(new Package(640, 1, 0.184, 0.4, 0.3, false));
+packages.push(new Package(1280, 1, 0.198, 0.45, 0.3, false));
 
+console.log(packages);
 
-const accrueRefProfit = () => {
-    const accrueRefToParent = (user, moneyProfit, coefIndex = 0 ) => {
-        // console.log(coefIndex);
-        // console.log(refProfitCoefs[coefIndex]);
-        // console.log(user.properties.parentRef);
-        if (!user.properties.parentRef || !refProfitCoefs[coefIndex]) {
-            return;
-        } else {
-            // console.log('refProfitFrom = ' + moneyProfit);                
-            // parent.properties.moneyProfit += user.properties.tokenProfit * tokenPrice * refProfitCoefs[coefIndex];
-            const parent = user.properties.parentRef;
-            parent.properties.moneyIncome += moneyProfit * refProfitCoefs[coefIndex];
-            globalMoneyBank -= moneyProfit * refProfitCoefs[coefIndex];
-            
-            accrueRefToParent(parent, moneyProfit, coefIndex + 1);
-        }           
-    }
-    users.forEach((user) => {
-        // const moneyProfit = user.properties.tokenProfit * tokenPrice;
-        accrueRefToParent(user, user.properties.moneySpent);
-    })        
-}
+const packageSets = new Object();
+let i;
+packages.forEach((package, index, array) => {
+    packageSets[package.properties.price] = array.filter((item) => item.properties.price <= package.properties.price);
+});
+// const newpackageSets = packages.reduce((accumulator, currentValue, index, array) => {
+//     accumulator[currentValue.properties.price] = array.filter((item) => item.properties.price <= currentValue.properties.price);
+// }, packageSets);
 
-const allUsersInviteFriend = () => {
-    users.forEach((user) => {
-        user.inviteFriend();
-    })
-}
+console.log(packageSets);
 
-// addMainUsers(newMainUsersCount);
-// for (let i = 0; i < 9; i++) {
-//     let lastUser = users[users.length - 1];
-//     lastUser.inviteFriend();
-//     // allUsersInviteFriend();
-// }
-
-// allUsersBuyAllPacks();
-// console.log(users[0].properties.tokenAmount);
-// accruePackProfit();
-// accrueRefProfit();
-// console.log(users[0].properties.tokenAmount);    
 
 const actionTemplates = [
     new ActionTemplate({entityName: '', actionName: 'addMainUsers', parmNames: ['newUsersPerCycle']}),
-    new ActionTemplate({entityName: 'currentCycle', actionName: 'cycleNewUsersBuyAllPacks', parmNames: []})
+    // new ActionTemplate({entityName: 'currentCycle', actionName: 'cycleNewUsersBuyAllPacks', parmNames: []})
+    new ActionTemplate({entityName: 'currentCycle', actionName: 'cycleNewUsersBuyDifferentRandomPackSets', parmNames: []})
     // new ActionTemplate({entityName: '', actionName: 'accruePackProfitToAll', parmNames: []})
 ]
 
+step = 0.001;
+tokenPrice = 0.01;
+split = 1000;
+startTokenCount = 100000000;
+
 const goal = {
-    // userCount: 1
+    // userCount: 1000,
     // cyclesCount: 1,
     moneyEarned: 20000000,
     tokensSold: startTokenCount
@@ -69,10 +48,7 @@ const options = {
     boostChance: 0,
     mode: 'instant',
     cycles: 1,
-    // newUsersPerCycle: getNewUsersCount,
-    // newUsersPerCycle: 500,
-    // startNewUsersCount: 500,
-    // newUsersGrowthIncrease: 100,
+
     newUsersPerCycle: {
         value: getNewUsersCount,
         parms: {
@@ -85,19 +61,16 @@ const options = {
             values: [500, 600, 700],
         }
     },
+    packageSets: [10, 20, 40],
     actionTemplates: actionTemplates,
-    breakPoints: [
-        0.015, 
-        0.025, 
-        // 0.035
+    onPriceChangeListeners: [
+        // new ChangeListener(eventTypes.price, 0.011, activatePackage, 640),
+        // new ChangeListener(eventTypes.price, 0.012, changeSplit, 'add', -500),
+        // new ChangeListener(eventTypes.price, 0.015, changeSplit, 'assign', 4000),
+        // new ChangeListener(eventTypes.price, 0.015, disablePackageImpactOnPrice, 80),
     ]
 }
 
-if (options.newUsersPerCycle.parms.mode && options.newUsersPerCycle.parms.mode === 'random') {
-    options.newUsersPerCycle.parms.values.forEach(value => {
-        returnedValues[value] = 0;
-    });
-}
 
 console.log(options);
 currentOptions = options;
@@ -105,6 +78,7 @@ const test = new Test(goal, options);
 currentTest = test;
 const start = new Date();
 test.run();
+
 console.log(test);
 console.log(returnedValues);
 

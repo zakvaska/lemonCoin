@@ -95,4 +95,22 @@ class Cycle {
         });
         this.properties.queueSize = queue.size;
     }
+
+    cycleNewUsersBuyOneRandomPackSetForAll = () => {
+        const packageSet = getRandomArrayItem(currentOptions.packageSets);
+        countReturnedRandomItem(packageSet, 'packageSets');
+
+        this.properties.users.forEach((user) => {
+            user.buyPackageSet(packageSet);
+        });
+        this.properties.queueSize = queue.size;
+    }
+
+    cycleNewUsersBuyDifferentRandomPackSets = () => {
+
+        this.properties.users.forEach((user) => {
+            user.buyRandomPackageSet();
+        });
+        this.properties.queueSize = queue.size;
+    }
 }

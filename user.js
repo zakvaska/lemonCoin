@@ -18,47 +18,51 @@ class User {
             boost: false,
             transactionHistory: [],
             id: ++lastID,
-            packageHistory: []
+            packageHistory: [],
+            packageSets: []
         }
     }
 
     buyPackage(currentPack) {  
-        const packPrice = currentPack.properties.price;     
-        this.properties.purchasesCount++;        
-        this.properties.moneySpent += packPrice;
-        const purchasedTokens = packPrice / tokenPrice;
-        this.properties.packages.push(new UserPackage(currentPack, purchasedTokens));
-        this.properties.tokenAmount += purchasedTokens;
-        this.properties.lockedTokens += purchasedTokens;
-        // this.properties.internalSwap += purchasedTokens * currentPack.properties.swapCoef;
-        // this.properties.tokensToBurn += purchasedTokens * currentPack.properties.freezeCoef;
-        let tokensFromSystem = 0;
-        if (isFirstCycle) {
-            tokensFromSystem = purchasedTokens;
-            registerTransaction(system, this, tokensFromSystem, 'token', 'issue');
-        } else {
-            tokensFromSystem = purchasedTokens * (1 - currentPack.properties.redeemFromSwap);
-            registerTransaction(system, this, tokensFromSystem, 'token', 'partialIssue');
-            const diff = redeemTokensFromSwap(purchasedTokens * currentPack.properties.redeemFromSwap, this);
-            //internal swap summary is not enough to supplement package purchase
-            if (diff > 0) {
-                tokensFromSystem += diff;
-                registerTransaction(system, this, diff, 'token', 'redemptionCompensation');
+        if (currentPack.properties.canBeBought) {
+            const packPrice = currentPack.properties.price;     
+            this.properties.purchasesCount++;        
+            this.properties.moneySpent += packPrice;
+            const purchasedTokens = (packPrice / tokenPrice) * currentPack.properties.bonus;
+
+            this.properties.packages.push(new UserPackage(currentPack, purchasedTokens));
+            this.properties.tokenAmount += purchasedTokens;
+            this.properties.lockedTokens += purchasedTokens;
+            // this.properties.internalSwap += purchasedTokens * currentPack.properties.swapCoef;
+            // this.properties.tokensToBurn += purchasedTokens * currentPack.properties.freezeCoef;
+            let tokensFromSystem = 0;
+            if (isFirstCycle) {
+                tokensFromSystem = purchasedTokens;
+                registerTransaction(system, this, tokensFromSystem, 'token', 'issue');
+            } else {
+                tokensFromSystem = purchasedTokens * (1 - currentPack.properties.redeemFromSwap);
+                registerTransaction(system, this, tokensFromSystem, 'token', 'partialIssue');
+                const diff = redeemTokensFromSwap(purchasedTokens * currentPack.properties.redeemFromSwap, this);
+                //internal swap summary is not enough to supplement package purchase
+                if (diff > 0) {
+                    tokensFromSystem += diff;
+                    registerTransaction(system, this, diff, 'token', 'redemptionCompensation');
+                }
             }
+
+            globalMoneyBank += tokensFromSystem * tokenPrice;
+            globalTransCount++;
+            globalTokensSold += tokensFromSystem;
+            totalTokensRemain -= tokensFromSystem;
+
+            currentTest.properties.current.moneyEarned += tokensFromSystem * tokenPrice;
+            currentTest.properties.current.tokensSold = globalTokensSold;
+            
+            if (currentPack.properties.affectsThePrice) globalIterationCoef += currentPack.properties.iterationCoef;
+            
+            // console.log('purchase!');
+            checkCoef();
         }
-
-        globalMoneyBank += tokensFromSystem * tokenPrice;
-        globalTransCount++;
-        globalTokensSold += tokensFromSystem;
-        totalTokensRemain -= tokensFromSystem;
-
-        currentTest.properties.current.moneyEarned += tokensFromSystem * tokenPrice;
-        currentTest.properties.current.tokensSold = globalTokensSold;
-        
-        if (currentPack.properties.affectsThePrice) globalIterationCoef += currentPack.properties.iterationCoef;
-        
-        // console.log('purchase!');
-        checkCoef();
     }
 
     buyRandomPackage() {        
@@ -71,10 +75,20 @@ class User {
     //with progression
     buyAllPacks() {
         packages.forEach((pack) => {
-            if (pack.properties.canBeBought) {
-                this.buyPackage(pack);
-            }     
+            this.buyPackage(pack); 
         });              
+    }
+
+    buyPackageSet(lastPackageInSetPrice) {
+        // const packageSet = packages.filter((userPackage) => userPackage.origin.properties.price <= lastPackageInSetPrice);
+        packageSets[lastPackageInSetPrice].forEach((pack) => this.buyPackage(pack));
+        this.properties.packageSets.push(packageSets[lastPackageInSetPrice]);
+    }
+
+    buyRandomPackageSet() {
+        const packageSet = getRandomArrayItem(currentOptions.packageSets);
+        countReturnedRandomItem(packageSet, 'packageSets');
+        this.buyPackageSet(packageSet);
     }
 
     inviteFriend() {

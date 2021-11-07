@@ -8,6 +8,7 @@ class Stage {
     totalPackPurchases += globalTransCount;
     // globalTokensSold += tokensSold;
     tokenPrice += step;
+    new Event(eventTypes.price, round3(tokenPrice));
     globalIterationCoef = 0;
     // globalTransCount = 0;
     // stageTokensSold = 0;

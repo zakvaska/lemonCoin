@@ -1,11 +1,11 @@
+const round3 = (number) => Math.round(number * 1000) / 1000;
+
 const levelUp = () => {
     const putAway = (packageId) => {
         packages[packageId].properties.canBeBought = false;
     }
 
-    const disablePack = (package) => {
-        package.properties.affectsThePrice = false;
-    }
+    
 
     stages.push(new Stage());        
     // if (stages.length <= 3) {
@@ -13,12 +13,12 @@ const levelUp = () => {
     //     putAway(stages.length - 1);            
     // }
     // console.log('new stage!');
-    currentOptions.breakPoints.forEach((breakPoint, index, array) => {
-        if ((Math.round(tokenPrice * 1000) / 1000) === breakPoint) {
-            disablePack(packages[index]);
-            // array.shift();
-        }
-    });
+    // currentOptions.breakPoints.forEach((breakPoint, index, array) => {
+    //     if (round3(tokenPrice) === breakPoint) {
+    //         disablePack(packages[index]);
+    //         // array.shift();
+    //     }
+    // });
 }
 
 const checkCoef = () => {
@@ -26,6 +26,7 @@ const checkCoef = () => {
         levelUp();
     }
 }
+
 
 var addMainUsers = (newMainUsersCount, boostedUsersGoal) => {
     // console.log('addMainUsers ' + newMainUsersCount);
@@ -177,6 +178,26 @@ const getBurnTotal = () => {
     return total;
 }
 
+const countReturnedRandomItem = (item, kind) => {
+    // console.log(item, kind);
+    // console.log(returnedValues[kind])
+    if (returnedValues[kind][item]) {
+        returnedValues[kind][item]++;
+    } else {
+        returnedValues[kind][item] = 1;
+    }
+}
+
+const getRandomArrayItem = (array) => {
+    const valuesCount = array.length;
+    const randomValue = Math.random();
+    const valueRandomIndex = randomValue === 1 ?
+    array.length - 1 :
+    Math.round((randomValue * valuesCount) - 0.5);
+    
+    return array[valueRandomIndex];
+}
+
 const getNewUsersCount = (parms) => {
     switch (parms.mode) {
         case 'ariphmetic':
@@ -184,16 +205,80 @@ const getNewUsersCount = (parms) => {
             return parms.startNewUsersCount + parms.newUsersGrowthIncrease * currentCycle.properties.index;
             // break;
         case 'random':
-            const valuesCount = parms.values.length;
-            const randomValue = Math.random();
-            const valueRandomIndex = randomValue === 1 ?
-            parms.values.length - 1 :
-            Math.round((randomValue * valuesCount) - 0.5);
-            
-            returnedValues[parms.values[valueRandomIndex]]++;
-            
-            return parms.values[valueRandomIndex];
+             const randomItem = getRandomArrayItem(parms.values);
+             countReturnedRandomItem(randomItem, 'newUsers');
+             return randomItem;
         default:
             return parms.startNewUsersCount;
     }
+}
+
+const createHandler = (action, ...args) => {
+    return {
+        fn: () => action.apply(null, args),
+        name: action.name
+    }
+}
+
+const changeSplit = (action, payload) => {
+    switch (action) {
+        case 'assign':
+            split = payload;
+            break;
+        case 'add':
+            split += payload;
+    }
+}
+
+const getPackage = (packagePrice) => packages.find((package) => package.properties.price === packagePrice);
+
+const activatePackage = (packagePrice) => {
+    const packageToActivate = getPackage(packagePrice);
+    packageToActivate.properties.canBeBought = true;
+}
+
+const disablePackageImpactOnPrice = (packagePrice) => {
+    getPackage(packagePrice).properties.affectsThePrice = false;
+}
+
+
+
+
+const allUsersBuyAllPacks = () => {
+    users.forEach((user) => {
+        // user.buyRandPackage();
+        user.buyAllPacks();
+        // user.inviteFriend();
+        // console.log(users); 
+    })
+}
+
+
+const accrueRefProfit = () => {
+    const accrueRefToParent = (user, moneyProfit, coefIndex = 0 ) => {
+        // console.log(coefIndex);
+        // console.log(refProfitCoefs[coefIndex]);
+        // console.log(user.properties.parentRef);
+        if (!user.properties.parentRef || !refProfitCoefs[coefIndex]) {
+            return;
+        } else {
+            // console.log('refProfitFrom = ' + moneyProfit);                
+            // parent.properties.moneyProfit += user.properties.tokenProfit * tokenPrice * refProfitCoefs[coefIndex];
+            const parent = user.properties.parentRef;
+            parent.properties.moneyIncome += moneyProfit * refProfitCoefs[coefIndex];
+            globalMoneyBank -= moneyProfit * refProfitCoefs[coefIndex];
+            
+            accrueRefToParent(parent, moneyProfit, coefIndex + 1);
+        }           
+    }
+    users.forEach((user) => {
+        // const moneyProfit = user.properties.tokenProfit * tokenPrice;
+        accrueRefToParent(user, user.properties.moneySpent);
+    })        
+}
+
+const allUsersInviteFriend = () => {
+    users.forEach((user) => {
+        user.inviteFriend();
+    })
 }

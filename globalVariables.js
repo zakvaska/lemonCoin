@@ -1,7 +1,8 @@
-const step = 0.001;
-let tokenPrice = 0.01;
-const split = 1000;
-const startTokenCount = 100000000;
+var step;
+var tokenPrice;
+var split;
+var startTokenCount;
+
 let globalMoneyBank = 0;
 // let totalPackagesSold = 0;
 let globalIterationCoef = 0;
@@ -56,4 +57,11 @@ const system = new System();
 //     }
 // }
 
-const returnedValues = {};
+const returnedValues = {
+    newUsers: {},
+    packageSets: {}
+};
+
+const eventTypes = {
+    price: 'onPriceChange'
+}

@@ -13,6 +13,8 @@ console.log(stages);
 console.log(users);
 console.log(queue);
 console.log(system);
+console.log(events);
+console.log(currentOptions);
 const end = new Date();
 // console.log(start);
 // console.log(end);

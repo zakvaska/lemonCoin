@@ -2,44 +2,20 @@ class Test {
     constructor(goal, options) {
         
         this.properties = {
-            // userCount: {
-            //     current: 0,
-            //     target: goal.userCount || 0
-            // },
-            // purchasedPacksCount: {
-            //     current: 0,
-            //     target: goal.purchasedPacksCount || 0
-            // },
-            // purchasedPacksCost: {
-            //     current: 0,
-            //     target: goal.purchasedPacksCost || 0
-            // },
-            // cyclesCount: {
-            //     current: 0,
-            //     target: goal.cyclesCount || 1
-            // },
-            // targetUserCount: goal.targetUserCount || 0,
-            // targetPurchasedPacksCount: goal.targetPurchasedPacksCount || 0,
-            // targetPurchasedPacksCost: goal.targetPurchasedPacksCost || 0,
-            // targetCyclesCount: goal.targetCyclesCount || 1,
-            // totalUserCount: 0,
-            // totalPurchasedPacksCount: 0,
-            // totalPurchasedPacksCost: 0,
-            // cyclesCount: 0,
             cycles: [],
             current: {
-                userCount: 0,
+                // userCount: 0,
                 cyclesCount: 0,
-                moneyEarned: 0,
-                tokensSold: 0
+                // moneyEarned: 0,
+                // tokensSold: 0
             },
             goal: goal,
             options: options
         }
-        // let key;
-        // for (key in goal) {
-        //     this.properties.current[key] = 0;
-        // }
+        let key;
+        for (key in goal) {
+            this.properties.current[key] = 0;
+        }
     }
 }
 
