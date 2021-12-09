@@ -8,6 +8,7 @@ console.log('globalTokensSold = ' + new Intl.NumberFormat('ru-RU').format(global
 console.log('totalTokensRemain = ' + new Intl.NumberFormat('ru-RU').format(totalTokensRemain.toFixed(2)));
 console.log('totalPackPurchases = ' + totalPackPurchases);
 console.log('globalMoneyBank = ' + new Intl.NumberFormat('ru-RU').format(globalMoneyBank.toFixed(2)) + ' $');
+console.log('globalTurnover = ' + new Intl.NumberFormat('ru-RU').format(globalTurnover.toFixed(2)) + ' $');
 
 console.log(stages);
 console.log(users);

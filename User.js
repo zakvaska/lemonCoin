@@ -51,6 +51,7 @@ class User {
             }
 
             globalMoneyBank += tokensFromSystem * tokenPrice;
+            globalTurnover += packPrice;
             globalTransCount++;
             globalTokensSold += tokensFromSystem;
             totalTokensRemain -= tokensFromSystem;

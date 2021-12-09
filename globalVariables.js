@@ -4,6 +4,7 @@ var split;
 var startTokenCount;
 
 let globalMoneyBank = 0;
+let globalTurnover = 0;
 // let totalPackagesSold = 0;
 let globalIterationCoef = 0;
 let globalTransCount = 0;
