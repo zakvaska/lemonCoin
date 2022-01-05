@@ -60,8 +60,11 @@ const registerTransaction = (seller, buyer, amount, currency, type) => {
     // console.log(new Transaction(amount, 0, 'token', 1));
 }
 
-const redeemTokensFromSwap = (tokensToRedeem, buyer) => {
+const maxCalls = 1000;
+
+const redeemTokensFromSwap = (tokensToRedeem, buyer, callIndexParm = 0) => {
     // console.log('redeemTokensFromSwap ' + tokensToRedeem);
+    const callIndex = callIndexParm;
     const iterator = queue.values();
     let firstUserInQueue = iterator.next().value;
     if (buyer === firstUserInQueue) firstUserInQueue = iterator.next().value;
@@ -96,7 +99,17 @@ const redeemTokensFromSwap = (tokensToRedeem, buyer) => {
         registerTransaction(firstUserInQueue, buyer, redeemedTokens, 'token', 'fullRedemption');
         // console.log('delete');
         queue.delete(firstUserInQueue);
-        return redeemTokensFromSwap(diff, buyer);
+        if (callIndex >= maxCalls) {
+            // console.log('setTimeout');
+            return setTimeout(redeemTokensFromSwap, 0, diff, buyer);
+        } else {
+            return redeemTokensFromSwap(diff, buyer, callIndex + 1);
+        }  
+        // try {
+        //     return redeemTokensFromSwap(diff, buyer, callIndex + 1);
+        // } catch(ex) {
+        //     alert(callIndex);
+        // }
     }
 }
 
@@ -114,21 +127,22 @@ const accruePackProfit = (user) => {
         if (!package.isPaidOut) {
             // console.log('accruePackProfitToUser');
             // const moneyProfit = package.origin.properties.price * package.origin.properties.profitRate;
-            // let unlockedTokens = moneyProfit / tokenPrice;
-            let unlockedTokens = package.purchasedTokens * package.origin.properties.profitRate;
-            if (package.lockedTokens < unlockedTokens) unlockedTokens = package.lockedTokens;
-            package.lockedTokens -= unlockedTokens;
-            // if (user.properties.lockedTokens < unlockedTokens) unlockedTokens = user.properties.lockedTokens;
-            user.properties.lockedTokens -= unlockedTokens;
-            user.properties.unlockedTokens += unlockedTokens;
-            user.properties.internalSwap += unlockedTokens * package.origin.properties.swapCoef;
-            user.properties.tokensToBurn += unlockedTokens * package.origin.properties.burnCoef;
-            if (package.lockedTokens === 0) {
+            // let profitTokens = moneyProfit / tokenPrice;
+            let profitTokens = package.purchasedTokens * package.origin.properties.profitRate;
+            if (package.lockedTokens < profitTokens) profitTokens = package.lockedTokens;
+            package.lockedTokens -= profitTokens;
+            // if (user.properties.lockedTokens < profitTokens) profitTokens = user.properties.lockedTokens;
+            user.properties.periodsLeft--;
+            user.properties.profitTokens += profitTokens;
+            user.properties.internalSwap += profitTokens;
+            // user.properties.internalSwap += profitTokens * package.origin.properties.swapCoef;
+            // user.properties.tokensToBurn += profitTokens * package.origin.properties.burnCoef;
+            if (package.periodsLeft === 0) {
                 //withdraw package from user's package list if the packege is paid out
                 // array.splice(index, 1);
                 package.isPaidOut = true;
             };
-            if (currentDay) user.properties.transactionHistory.push(new Transaction(unlockedTokens, currentDay.properties.index));
+            if (currentDay) user.properties.transactionHistory.push(new Transaction(profitTokens, currentDay.properties.index));
         }
         
         // totalTokenPaidProfit += tokenProfit;

@@ -1,5 +1,5 @@
 class Package {
-    constructor(price, iterationCoef, profitRate, swapCoef, redeemFromSwap, canBeBought, bonus = 0) {
+    constructor(price, iterationCoef, profitRate, swapCoef, redeemFromSwap, canBeBought, bonus = 0, periodsAmount) {
         this.properties = {
             price: price,
             iterationCoef: iterationCoef,
@@ -9,7 +9,8 @@ class Package {
             swapCoef: swapCoef,
             burnCoef: 1 - swapCoef,
             redeemFromSwap: redeemFromSwap,
-            bonus: bonus + 1
+            bonus: bonus + 1,
+            periodsAmount: periodsAmount
         }
     }
 }
@@ -36,10 +37,10 @@ const getRandomPackageId = () => {
 }
 
 class UserPackage {
-    constructor(pack, lockedTokens) {
+    constructor(pack, purchasedTokens) {
         this.origin = pack;
-        this.purchasedTokens = lockedTokens;
-        this.lockedTokens = lockedTokens;
+        this.purchasedTokens = purchasedTokens;
+        this.periodsLeft = pack.periodsAmount
         this.isPaidOut = false;
     }
 }

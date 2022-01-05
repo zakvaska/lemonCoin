@@ -8,7 +8,7 @@ class ActionTemplate {
 
     createAction = () => {
         const entity = window[this.entityName] || window;
-        // console.log(this.areParmsNedeed);
+        // console.log(entity);
         if (this.parmNames.length) {
             // console.log(this);
             // const bindedFunction = () => {
@@ -26,6 +26,7 @@ class ActionTemplate {
             // console.log(this.parmNames);
             return entity[this.actionName].bind(null, ...this.parmValues);
         } else {
+            // console.log(entity[this.actionName]);
             return entity[this.actionName];
         }
 

@@ -11,8 +11,8 @@ class User {
             parentRef: parent,
             packages: [],
             tokenAmount: 0,
-            lockedTokens: 0,
-            unlockedTokens: 0,
+            purchasedTokens: 0,
+            profitTokens: 0,
             internalSwap: 0,
             tokensToBurn: 0,
             boost: false,
@@ -32,7 +32,7 @@ class User {
 
             this.properties.packages.push(new UserPackage(currentPack, purchasedTokens));
             this.properties.tokenAmount += purchasedTokens;
-            this.properties.lockedTokens += purchasedTokens;
+            this.properties.purchasedTokens += purchasedTokens;
             // this.properties.internalSwap += purchasedTokens * currentPack.properties.swapCoef;
             // this.properties.tokensToBurn += purchasedTokens * currentPack.properties.freezeCoef;
             let tokensFromSystem = 0;

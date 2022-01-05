@@ -51,12 +51,6 @@ class System {
     }
 }
 const system = new System();
-// const system = {
-//     properties: {
-//         id: 0,
-//         transactionHistory: []
-//     }
-// }
 
 const returnedValues = {
     newUsers: {},
@@ -66,3 +60,46 @@ const returnedValues = {
 const eventTypes = {
     price: 'onPriceChange'
 }
+
+class ExternalProjects {
+    constructor() {
+        this.properties = {
+            id: -1,
+            transactionHistory: [],
+            tokensPurchased: 0
+        }
+        console.log(this);
+    }
+    
+    redeem() {
+        const tokensAmount = redemptionByExternalProjects / tokenPrice;
+        const diff = redeemTokensFromSwap(tokensAmount, externalProjects);
+        if (diff > 0) {
+            registerTransaction(system, externalProjects, diff, 'token', 'redemptionCompensation');
+            globalMoneyBank += diff * tokenPrice;
+            globalTransCount++;
+
+            currentTest.properties.current.moneyEarned += diff * tokenPrice;
+        }
+        externalProjects.properties.tokensPurchased += tokensAmount;
+
+        // console.log('redeem');
+        // console.log(this);
+        // const tokensAmount = redemptionByExternalProjects / tokenPrice;
+        // const diff = redeemTokensFromSwap(tokensAmount, this);
+        // if (diff > 0) {
+        //     registerTransaction(system, this, diff, 'token', 'redemptionCompensation');
+        //     globalMoneyBank += diff * tokenPrice;
+        //     globalTurnover += packPrice;
+        //     globalTransCount++;
+
+        //     currentTest.properties.current.moneyEarned += diff * tokenPrice;
+        // }
+        // this.properties.tokensPurchased += tokensAmount;
+    }
+}
+
+
+var externalProjects = new ExternalProjects();
+
+var redemptionByExternalProjects;

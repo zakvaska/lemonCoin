@@ -16,6 +16,7 @@ console.log(queue);
 console.log(system);
 console.log(events);
 console.log(currentOptions);
+console.log(externalProjects);
 const end = new Date();
 // console.log(start);
 // console.log(end);
