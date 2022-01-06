@@ -1,5 +1,6 @@
 class ChangeListener {
-    constructor(eventType, triggerValue, handler, ...args) {
+    constructor(message, eventType, triggerValue, handler, ...args) {
+        this.message = message;
         this.eventType = eventType;
         this.triggerValue = triggerValue;
         this.handler = () => handler.apply(null, args);
@@ -9,7 +10,7 @@ class ChangeListener {
     }
 
     executeAction() {
-        // console.log('execute');
+        console.log(`${this.message} ${this.eventType} with value ${this.triggerValue}`);
         this.operationCounter++;
         this.handler();
     }

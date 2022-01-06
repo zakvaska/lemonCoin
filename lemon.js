@@ -70,8 +70,11 @@ const options = {
     packageSets: [10, 30, 70],
     actionTemplates: actionTemplates,
     onPriceChangeListeners: [
+        // new ChangeListener(eventType, triggerValue, handler, ...args)
+        new ChangeListener('changed split', eventTypes.price, 0.012, change, 'split', 'add', -500),
+        new ChangeListener('changed redemptionByExternalProjects', eventTypes.price, 0.012, change, 'redemptionByExternalProjects', 'add', -50000),
+        new ChangeListener('turned off burn coef', eventTypes.price, 0.012, turnOffBurn),
         // new ChangeListener(eventTypes.price, 0.011, activatePackage, 640),
-        // new ChangeListener(eventTypes.price, 0.012, changeSplit, 'add', -500),
         // new ChangeListener(eventTypes.price, 0.015, changeSplit, 'assign', 4000),
         // new ChangeListener(eventTypes.price, 0.015, disablePackageImpactOnPrice, 80),
     ]
@@ -87,6 +90,8 @@ test.run();
 
 console.log(test);
 console.log(returnedValues);
+// console.log(split);
+// console.log(redemptionByExternalProjects);
 
 /*check reedemTokens*/
 // const user1 = new User(null);

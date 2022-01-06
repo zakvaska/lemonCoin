@@ -11,6 +11,11 @@ class Package {
         this.bonus = bonus + 1;
         this.periodsAmount = periodsAmount;
     }
+
+    turnOffBurn() {
+        this.swapCoef = 1;
+        this.burnCoef = 0;
+    }
 }
 
 const packages = [

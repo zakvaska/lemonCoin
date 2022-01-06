@@ -12,6 +12,7 @@ console.log('totalPackPurchases = ' + totalPackPurchases);
 console.log('globalMoneyBank = ' + new Intl.NumberFormat('ru-RU').format(globalMoneyBank.toFixed(2)) + ' $');
 console.log('globalTurnover = ' + new Intl.NumberFormat('ru-RU').format(globalTurnover.toFixed(2)) + ' $');
 console.log('globalRedeemedTokens = ' + new Intl.NumberFormat('ru-RU').format(globalRedeemedTokens.toFixed(2)));
+console.log('usersRedemptionProfit = ' + new Intl.NumberFormat('ru-RU').format(usersRedemptionProfit.toFixed(2)) + ' $');
 
 console.log(stages);
 console.log(users);

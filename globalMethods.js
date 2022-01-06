@@ -77,6 +77,7 @@ const redeemTokensFromSwap = (tokensToRedeem, buyer, callIndexParm = 0) => {
         firstUserInQueue.internalSwap -= redeemedTokens;
         // console.log(tokensToRedeem * tokenPrice);
         firstUserInQueue.moneyIncome += redeemedTokens * tokenPrice;
+        usersRedemptionProfit += redeemedTokens * tokenPrice;
         firstUserInQueue.redeemedTokens += redeemedTokens;
         globalRedeemedTokens += redeemedTokens;
         registerTransaction(firstUserInQueue, buyer, redeemedTokens, 'token', 'partialRedemption');
@@ -87,6 +88,7 @@ const redeemTokensFromSwap = (tokensToRedeem, buyer, callIndexParm = 0) => {
         const redeemedTokens = firstUserInQueue.internalSwap;
         firstUserInQueue.internalSwap = 0;
         firstUserInQueue.moneyIncome += redeemedTokens * tokenPrice;
+        usersRedemptionProfit += redeemedTokens * tokenPrice;
         firstUserInQueue.redeemedTokens += redeemedTokens;
         globalRedeemedTokens += redeemedTokens;
         registerTransaction(firstUserInQueue, buyer, redeemedTokens, 'token', 'fullRedemption');
@@ -100,6 +102,7 @@ const redeemTokensFromSwap = (tokensToRedeem, buyer, callIndexParm = 0) => {
         const redeemedTokens = firstUserInQueue.internalSwap;
         firstUserInQueue.internalSwap = 0;
         firstUserInQueue.moneyIncome += redeemedTokens * tokenPrice;
+        usersRedemptionProfit += redeemedTokens * tokenPrice;
         firstUserInQueue.redeemedTokens += redeemedTokens;
         globalRedeemedTokens += redeemedTokens;
         registerTransaction(firstUserInQueue, buyer, redeemedTokens, 'token', 'fullRedemption');
@@ -140,14 +143,14 @@ const accruePackProfit = (user) => {
             // if (user.lockedTokens < profitTokens) profitTokens = user.lockedTokens;
             package.periodsLeft--;
             user.profitTokens += profitTokens;
-            user.internalSwap += profitTokens;
+            // user.internalSwap += profitTokens;
+            user.internalSwap += profitTokens * package.origin.swapCoef;
+            user.tokensToBurn += profitTokens * package.origin.burnCoef;
 
             // globalTransCount++;
             globalTokensIssued += profitTokens;
             globalTokensPaidOut += profitTokens;
             totalTokensRemain -= profitTokens;
-            // user.internalSwap += profitTokens * package.origin.swapCoef;
-            // user.tokensToBurn += profitTokens * package.origin.burnCoef;
             user.profitPaymentsCount++;
             registerTransaction(system, user, profitTokens, 'token', 'packageProfit');
             if (package.periodsLeft === 0) {
@@ -257,6 +260,17 @@ const changeSplit = (action, payload) => {
     }
 }
 
+const change = (variable, action, payload) => {
+    // console.log(variable);
+    switch (action) {
+        case 'assign':
+            window[variable] = payload;
+            break;
+        case 'add':
+            window[variable] += payload;
+    }
+}
+
 const getPackage = (packagePrice) => packages.find((package) => package.price === packagePrice);
 
 const activatePackage = (packagePrice) => {
@@ -307,5 +321,11 @@ const accrueRefProfit = () => {
 const allUsersInviteFriend = () => {
     users.forEach((user) => {
         user.inviteFriend();
+    })
+}
+
+const turnOffBurn = () => {
+    packages.forEach((package) => {
+        package.turnOffBurn();
     })
 }
