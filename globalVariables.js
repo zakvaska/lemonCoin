@@ -16,6 +16,7 @@ let totalPackPurchases = 0;
 // let stageTokensSold = 0;
 let lastStageTokensSold = 0;
 let globalRedeemedTokens = 0;
+let usersRedemptionProfit = 0;
 
 // let totalTokenPaidProfit = 0;
 
@@ -47,10 +48,8 @@ const queue = new Set();
 
 class System {
     constructor() {
-        this.properties = {
-            id: 0,
-            transactionHistory: []
-        }
+        this.id = 0;
+        this.transactionHistory = [];
     }
 }
 const system = new System();
@@ -66,11 +65,9 @@ const eventTypes = {
 
 class ExternalProjects {
     constructor() {
-        this.properties = {
-            id: -1,
-            transactionHistory: [],
-            tokensPurchased: 0
-        }
+        this.id = -1;
+        this.transactionHistory = [];
+        this.tokensPurchased = 0;
         console.log(this);
     }
     
@@ -81,11 +78,13 @@ class ExternalProjects {
             registerTransaction(system, externalProjects, diff, 'token', 'redemptionCompensation');
             globalMoneyBank += diff * tokenPrice;
             globalTurnover += diff * tokenPrice;
+            globalTokensIssued += diff;
+            globalTokensSold += diff;
             globalTransCount++;
 
-            currentTest.properties.current.moneyEarned += diff * tokenPrice;
+            currentTest.current.moneyEarned += diff * tokenPrice;
         }
-        externalProjects.properties.tokensPurchased += tokensAmount;
+        externalProjects.tokensPurchased += tokensAmount;
 
         // console.log('redeem');
         // console.log(this);
@@ -97,9 +96,9 @@ class ExternalProjects {
         //     globalTurnover += packPrice;
         //     globalTransCount++;
 
-        //     currentTest.properties.current.moneyEarned += diff * tokenPrice;
+        //     currentTest.current.moneyEarned += diff * tokenPrice;
         // }
-        // this.properties.tokensPurchased += tokensAmount;
+        // this.tokensPurchased += tokensAmount;
     }
 }
 

@@ -1,16 +1,14 @@
 class Transaction {
     constructor(amount, day, cycleIndex, product, type, source, sourceID, target, targetID) {
-        this.properties = {
-            amount: amount,
-            day: day,
-            cycleIndex: cycleIndex,
-            tokenPrice: tokenPrice,
-            product: product,
-            type: type,
-            source: source,
-            sourceID: sourceID,
-            target: target,
-            targetID: targetID
-        }
+        this.amount = amount;
+        this.day = day;
+        this.cycleIndex = cycleIndex;
+        this.tokenPrice = tokenPrice;
+        this.product = product;
+        this.type = type;
+        this.source = source;
+        this.sourceID = sourceID;
+        this.target = target;
+        this.targetID = targetID;
     }
 }

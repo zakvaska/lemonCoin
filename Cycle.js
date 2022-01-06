@@ -1,49 +1,47 @@
 class Cycle {
     constructor(goal, options, index) {
-        this.properties = {
-            totalUserCount: 0,
-            totalPurchasedPacksCount: 0,
-            totalPurchasedTokensCost: 0,
-            status: 'inactive',
-            days: [],
-            goal: goal,
-            options: options,
-            // even: true
-            scheduledUsersCount: 0,
-            instantActions: [],
-            users: [],
-            index: index
-        }
+        this.totalUserCount = 0;
+        this.totalPurchasedPacksCount = 0;
+        this.totalPurchasedTokensCost = 0;
+        this.status = 'inactive';
+        this.days = [];
+        this.goal = goal;
+        this.options = options;
+        // even: true
+        this.scheduledUsersCount = 0;
+        this.instantActions = [];
+        this.users = [];
+        this.index = index
     }
 
     generateDay() {
-        // console.log(this.properties.days.length);
-        const day = new Day(this.properties.days.length);
-        const goal = this.properties.goal;
+        // console.log(this.days.length);
+        const day = new Day(this.days.length);
+        const goal = this.goal;
 
         day.addAction(day.open.bind(day));
         
-        if (goal.targetUserCount && goal.targetUserCount > this.properties.scheduledUsersCount) {
+        if (goal.targetUserCount && goal.targetUserCount > this.scheduledUsersCount) {
 
-            // const round = this.properties.even ? Math.floor : Math.ceil;
+            // const round = this.even ? Math.floor : Math.ceil;
             const newUsersCountToday = Math.round(goal.targetUserCount / goal.period);
-            // this.properties.even = !this.properties.even;
+            // this.even = !this.even;
             const boostedUsersGoal = Math.round(newUsersCountToday * goal.boostChance);
             day.addAction(addMainUsers.bind(null, newUsersCountToday, boostedUsersGoal));
-            this.properties.scheduledUsersCount += newUsersCountToday;
+            this.scheduledUsersCount += newUsersCountToday;
 
             
         } 
 
         day.addAction(day.close.bind(day));
         
-        this.properties.days.push(day);
+        this.days.push(day);
     }
 
     generateInstantActions() {
         // console.log('generateInstantActions');
-        this.properties.instantActions = getActions(this.properties.options);
-        // console.log(this.properties.instantActions);
+        this.instantActions = getActions(this.options);
+        // console.log(this.instantActions);
     }
 
     executeInstantActions(instantActions) {
@@ -55,62 +53,62 @@ class Cycle {
     }
 
     openCycle = () => {
-        this.properties.status = 'open';
-        this.properties.startTokenPrice = tokenPrice;
-        this.properties.tokensSoldStart = globalTokensIssued;
-        this.properties.internalSwapStart = getSwapTotal();
-        this.properties.tokensToBurnStart = getBurnTotal();
+        this.status = 'open';
+        this.startTokenPrice = tokenPrice;
+        this.tokensSoldStart = globalTokensIssued;
+        this.internalSwapStart = getSwapTotal();
+        this.tokensToBurnStart = getBurnTotal();
         return this;
     }
 
     closeCycle = () => {
         accruePackProfitToAll();
-        this.properties.status = 'closed';
-        this.properties.endTokenPrice = tokenPrice;
-        this.properties.tokensSoldEnd = globalTokensIssued;
-        this.properties.tokensSold = this.properties.tokensSoldEnd - this.properties.tokensSoldStart;
-        this.properties.internalSwapEnd = getSwapTotal();
-        this.properties.internalSwapDiff = this.properties.internalSwapEnd - this.properties.internalSwapStart;
-        this.properties.tokensToBurnEnd = getBurnTotal();
-        this.properties.tokensToBurnDiff = this.properties.tokensToBurnEnd - this.properties.tokensToBurnStart;
-        this.properties.totalUsersCount = users.length;
+        this.status = 'closed';
+        this.endTokenPrice = tokenPrice;
+        this.tokensSoldEnd = globalTokensIssued;
+        this.tokensSold = this.tokensSoldEnd - this.tokensSoldStart;
+        this.internalSwapEnd = getSwapTotal();
+        this.internalSwapDiff = this.internalSwapEnd - this.internalSwapStart;
+        this.tokensToBurnEnd = getBurnTotal();
+        this.tokensToBurnDiff = this.tokensToBurnEnd - this.tokensToBurnStart;
+        this.totalUsersCount = users.length;
         if (isFirstCycle) isFirstCycle = false;
         return this;
     }
 
     runScenario = () => {
-        // console.log(this.properties.options);
-        if (this.properties.days && this.properties.options.mode === 'distributed') this.properties.days.forEach(day => day.executeActions());
-        if (this.properties.options.mode === 'instant') this.executeInstantActions(this.properties.instantActions);
+        // console.log(this.options);
+        if (this.days && this.options.mode === 'distributed') this.days.forEach(day => day.executeActions());
+        if (this.options.mode === 'instant') this.executeInstantActions(this.instantActions);
 
         return this;     
     }
 
     cycleNewUsersBuyAllPacks = () => {
-        // console.log('cycleNewUsers ' + this.properties.users.length + ' BuyAllPacks ' + packages.length);    
-        // console.log(this.properties.users[0]);
-        // this.properties.users[0].buyAllPacks();
-        this.properties.users.forEach((user) => {
+        // console.log('cycleNewUsers ' + this.users.length + ' BuyAllPacks ' + packages.length);    
+        // console.log(this.users[0]);
+        // this.users[0].buyAllPacks();
+        this.users.forEach((user) => {
             user.buyAllPacks();
         });
-        this.properties.queueSize = queue.size;
+        this.queueSize = queue.size;
     }
 
     cycleNewUsersBuyOneRandomPackSetForAll = () => {
         const packageSet = getRandomArrayItem(currentOptions.packageSets);
         countReturnedRandomItem(packageSet, 'packageSets');
 
-        this.properties.users.forEach((user) => {
+        this.users.forEach((user) => {
             user.buyPackageSet(packageSet);
         });
-        this.properties.queueSize = queue.size;
+        this.queueSize = queue.size;
     }
 
     cycleNewUsersBuyDifferentRandomPackSets = () => {
 
-        this.properties.users.forEach((user) => {
+        this.users.forEach((user) => {
             user.buyRandomPackageSet();
         });
-        this.properties.queueSize = queue.size;
+        this.queueSize = queue.size;
     }
 }

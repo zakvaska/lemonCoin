@@ -1,10 +1,8 @@
 class Stage {
-    constructor () {
-    this.properties = {  
-        transCount: globalTransCount,      
-        tokensSold: globalTokensIssued - lastStageTokensSold,        
-        price: tokenPrice
-    }
+  constructor () { 
+    this.transCount = globalTransCount;
+    this.tokensSold = globalTokensIssued - lastStageTokensSold;
+    this.price = tokenPrice;
     totalPackPurchases += globalTransCount;
     // globalTokensIssued += tokensSold;
     tokenPrice += step;

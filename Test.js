@@ -1,60 +1,59 @@
 class Test {
     constructor(goal, options) {
         
-        this.properties = {
-            cycles: [],
-            current: {
-                // userCount: 0,
-                cyclesCount: 0,
-                // moneyEarned: 0,
-                // tokensSold: 0
-            },
-            goal: goal,
-            options: options
-        }
+        this.cycles = [];
+        this.current = {
+            // userCount: 0,
+            cyclesCount: 0,
+            // moneyEarned: 0,
+            // tokensSold: 0
+        };
+        this.goal = goal;
+        this.options = options;
+
         let key;
         for (key in goal) {
-            this.properties.current[key] = 0;
+            this.current[key] = 0;
         }
     }
 }
 
 Test.prototype.createCycle = function() {
-    const newCycle = new Cycle(this.properties.goal, this.properties.options, this.properties.current.cyclesCount++);
+    const newCycle = new Cycle(this.goal, this.options, this.current.cyclesCount++);
     currentCycle = newCycle;
     
-    // currentTest.properties.current.cyclesCount++;
+    // currentTest.current.cyclesCount++;
 
     let i;
-    if (this.properties.options.mode === 'distributed') {
+    if (this.options.mode === 'distributed') {
         for (i = 0; i < goal.period; i++) {
             newCycle.generateDay();
         } 
-    } else if (this.properties.options.mode === 'instant') {
-        newCycle.generateInstantActions(this.properties.goal);
+    } else if (this.options.mode === 'instant') {
+        newCycle.generateInstantActions(this.goal);
     }
     
     // console.log(newCycle);
-    // this.properties.cyclesCount++;
-    this.properties.cycles.push(newCycle);
+    // this.cyclesCount++;
+    this.cycles.push(newCycle);
     return newCycle;
 }
 
 Test.prototype.run = function() {
     // console.log(scenario);
-    // console.log(this.properties.options.cycles);
+    // console.log(this.options.cycles);
     // test.createCycle.bind(test);
     
     let shouldContinue = true;
-    // for (let i = 0; i < this.properties.options.cycles; i++) {
+    // for (let i = 0; i < this.options.cycles; i++) {
     while (shouldContinue) {
         
         // if (!shouldContinue) return;
         // console.log(shouldContinue);
         // console.log('create');
-        // if (users.length >= this.properties.targetUserCount 
-        //     || (this.properties.targetPurchasedPacksCount && this.properties.totalPurchasedPacksCount >= this.properties.targetPurchasedPacksCount)
-        //     || (this.properties.targetPurchasedPacksCost && this.properties.totalPurchasedPacksCost >= this.properties.targetPurchasedPacksCost)
+        // if (users.length >= this.targetUserCount 
+        //     || (this.targetPurchasedPacksCount && this.totalPurchasedPacksCount >= this.targetPurchasedPacksCount)
+        //     || (this.targetPurchasedPacksCost && this.totalPurchasedPacksCost >= this.targetPurchasedPacksCost)
         //     ) return;
         const cycle = this.createCycle();
         // const cycle = test.createCycle(this);
@@ -63,7 +62,7 @@ Test.prototype.run = function() {
         // cycle.runScenario();
         // cycle.closeCycle();
         // console.log(steps[0]); 
-        shouldContinue = this.checkRestrictions(this.properties.goal);
+        shouldContinue = this.checkRestrictions(this.goal);
     }
    
 }
@@ -71,13 +70,13 @@ Test.prototype.run = function() {
 Test.prototype.checkRestrictions = function(goal) {
     // console.log('check');
     for (let key in goal) {
-        // console.log(this.properties[key].target);
-        // console.log(this.properties[key].current);
-        if (this.properties.goal[key] <= this.properties.current[key] && this.properties.goal[key]){
-            console.log(`goal ${key} has been reached with value ${new Intl.NumberFormat('ru-RU').format(this.properties.current[key].toFixed(2))}`);
+        // console.log(this[key].target);
+        // console.log(this[key].current);
+        if (this.goal[key] <= this.current[key] && this.goal[key]){
+            console.log(`goal ${key} has been reached with value ${new Intl.NumberFormat('ru-RU').format(this.current[key].toFixed(2))}`);
             return false;
         } 
-        if (this.properties.current[key] === 0) {
+        if (this.current[key] === 0) {
             console.error(`current value (${key}) did not change!`);
             return false;
         } 

@@ -1,17 +1,15 @@
 class Package {
     constructor(price, iterationCoef, profitRate, swapCoef, redeemFromSwap, canBeBought, bonus = 0, periodsAmount) {
-        this.properties = {
-            price: price,
-            iterationCoef: iterationCoef,
-            profitRate: profitRate,
-            canBeBought: canBeBought,
-            affectsThePrice: true,
-            swapCoef: swapCoef,
-            burnCoef: 1 - swapCoef,
-            redeemFromSwap: redeemFromSwap,
-            bonus: bonus + 1,
-            periodsAmount: periodsAmount
-        }
+        this.price = price;
+        this.iterationCoef = iterationCoef;
+        this.profitRate = profitRate;
+        this.canBeBought = canBeBought;
+        this.affectsThePrice = true;
+        this.swapCoef = swapCoef;
+        this.burnCoef = 1 - swapCoef;
+        this.redeemFromSwap = redeemFromSwap;
+        this.bonus = bonus + 1;
+        this.periodsAmount = periodsAmount;
     }
 }
 
@@ -40,7 +38,7 @@ class UserPackage {
     constructor(pack, purchasedTokens) {
         this.origin = pack;
         this.purchasedTokens = purchasedTokens;
-        this.periodsLeft = pack.properties.periodsAmount;
+        this.periodsLeft = pack.periodsAmount;
         this.isPaidOut = false;
     }
 }

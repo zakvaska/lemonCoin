@@ -16,12 +16,12 @@ const packageSets = new Object();
 let i;
 let accumulator = 0;
 packages.forEach((package, index, array) => {
-    accumulator += package.properties.price;
+    accumulator += package.price;
     // console.log(accumulator);
-    packageSets[accumulator] = array.filter((item) => item.properties.price <= package.properties.price);
+    packageSets[accumulator] = array.filter((item) => item.price <= package.price);
 });
 // const newpackageSets = packages.reduce((accumulator, currentValue, index, array) => {
-//     accumulator[currentValue.properties.price] = array.filter((item) => item.properties.price <= currentValue.properties.price);
+//     accumulator[currentValue.price] = array.filter((item) => item.price <= currentValue.price);
 // }, packageSets);
 
 console.log(packageSets);

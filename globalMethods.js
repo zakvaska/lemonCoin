@@ -2,7 +2,7 @@ const round3 = (number) => Math.round(number * 1000) / 1000;
 
 const levelUp = () => {
     const putAway = (packageId) => {
-        packages[packageId].properties.canBeBought = false;
+        packages[packageId].canBeBought = false;
     }
 
     
@@ -35,18 +35,18 @@ var addMainUsers = (newMainUsersCount, boostedUsersGoal) => {
         user = new User(null);
         users.push(user);
         
-        currentTest.properties.current.userCount++;
-        currentCycle.properties.users.push(user);
+        currentTest.current.userCount++;
+        currentCycle.users.push(user);
         
         // if (!!(Math.round(Math.random() - (0.5 - boostChance)))) {
         if (boostedUsers.length <= boostedUsersGoal) {
             
-            user.properties.boost = true;
+            user.boost = true;
             boostedUsers.push(user);
         }
         
         // console.log(user.boost);
-        if (currentDay) currentDay.properties.users.push(user);
+        if (currentDay) currentDay.users.push(user);
     }
 }
 
@@ -54,9 +54,9 @@ const registerTransaction = (seller, buyer, amount, product, type) => {
     // console.log(seller);
     // console.log(buyer);
     // console.log(amount);
-    const newTransacton = new Transaction(amount, 0, currentCycle.properties.index, product, type, seller, seller.properties.id, buyer, buyer.properties.id);
-    seller.properties.transactionHistory.push(newTransacton);
-    buyer.properties.transactionHistory.push(newTransacton);
+    const newTransacton = new Transaction(amount, 0, currentCycle.index, product, type, seller, seller.id, buyer, buyer.id);
+    seller.transactionHistory.push(newTransacton);
+    buyer.transactionHistory.push(newTransacton);
     // console.log(new Transaction(amount, 0, 'token', 1));
 }
 
@@ -69,25 +69,25 @@ const redeemTokensFromSwap = (tokensToRedeem, buyer, callIndexParm = 0) => {
     let firstUserInQueue = iterator.next().value;
     if (buyer === firstUserInQueue) firstUserInQueue = iterator.next().value;
     if (!firstUserInQueue) return tokensToRedeem;
-    const diff = tokensToRedeem - firstUserInQueue.properties.internalSwap;
+    const diff = tokensToRedeem - firstUserInQueue.internalSwap;
     // console.log(diff);
     if (diff < 0) {
         //successfull package purchase using (first user's in queue internal swap)*, but less than need to redeem all tokens from * 
         const redeemedTokens = tokensToRedeem;
-        firstUserInQueue.properties.internalSwap -= redeemedTokens;
+        firstUserInQueue.internalSwap -= redeemedTokens;
         // console.log(tokensToRedeem * tokenPrice);
-        firstUserInQueue.properties.moneyIncome += redeemedTokens * tokenPrice;
-        firstUserInQueue.properties.redeemedTokens += redeemedTokens;
+        firstUserInQueue.moneyIncome += redeemedTokens * tokenPrice;
+        firstUserInQueue.redeemedTokens += redeemedTokens;
         globalRedeemedTokens += redeemedTokens;
         registerTransaction(firstUserInQueue, buyer, redeemedTokens, 'token', 'partialRedemption');
         return diff;
     } else if (diff === 0) {
         //successfull package purchase using (first user's in queue internal swap)*, and enough to redeem all tokens from * 
         // console.log(tokensToRedeem * tokenPrice);
-        const redeemedTokens = firstUserInQueue.properties.internalSwap;
-        firstUserInQueue.properties.internalSwap = 0;
-        firstUserInQueue.properties.moneyIncome += redeemedTokens * tokenPrice;
-        firstUserInQueue.properties.redeemedTokens += redeemedTokens;
+        const redeemedTokens = firstUserInQueue.internalSwap;
+        firstUserInQueue.internalSwap = 0;
+        firstUserInQueue.moneyIncome += redeemedTokens * tokenPrice;
+        firstUserInQueue.redeemedTokens += redeemedTokens;
         globalRedeemedTokens += redeemedTokens;
         registerTransaction(firstUserInQueue, buyer, redeemedTokens, 'token', 'fullRedemption');
         // console.log('delete');
@@ -97,10 +97,10 @@ const redeemTokensFromSwap = (tokensToRedeem, buyer, callIndexParm = 0) => {
         //not enough tokens from (first user's in queue internal swap)* => 
         // redeem all tokens from * and repeat for the next user in queue to redeem remaining tokens
         // console.log(tokensToRedeem * tokenPrice);
-        const redeemedTokens = firstUserInQueue.properties.internalSwap;
-        firstUserInQueue.properties.internalSwap = 0;
-        firstUserInQueue.properties.moneyIncome += redeemedTokens * tokenPrice;
-        firstUserInQueue.properties.redeemedTokens += redeemedTokens;
+        const redeemedTokens = firstUserInQueue.internalSwap;
+        firstUserInQueue.internalSwap = 0;
+        firstUserInQueue.moneyIncome += redeemedTokens * tokenPrice;
+        firstUserInQueue.redeemedTokens += redeemedTokens;
         globalRedeemedTokens += redeemedTokens;
         registerTransaction(firstUserInQueue, buyer, redeemedTokens, 'token', 'fullRedemption');
         // console.log('delete');
@@ -129,33 +129,33 @@ var accruePackProfitToAll = () => {
 const accruePackProfit = (user) => {
     
     // console.log(user);
-    user.properties.packages.forEach((package, index, array) => {
+    user.packages.forEach((package, index, array) => {
         if (!package.isPaidOut) {
             // console.log('accruePackProfitToUser');
-            // const moneyProfit = package.origin.properties.price * package.origin.properties.profitRate;
+            // const moneyProfit = package.origin.price * package.origin.profitRate;
             // let profitTokens = moneyProfit / tokenPrice;
-            let profitTokens = package.purchasedTokens * package.origin.properties.profitRate;
+            let profitTokens = package.purchasedTokens * package.origin.profitRate;
             // if (package.lockedTokens < profitTokens) profitTokens = package.lockedTokens;
             // package.lockedTokens -= profitTokens;
-            // if (user.properties.lockedTokens < profitTokens) profitTokens = user.properties.lockedTokens;
+            // if (user.lockedTokens < profitTokens) profitTokens = user.lockedTokens;
             package.periodsLeft--;
-            user.properties.profitTokens += profitTokens;
-            user.properties.internalSwap += profitTokens;
+            user.profitTokens += profitTokens;
+            user.internalSwap += profitTokens;
 
             // globalTransCount++;
             globalTokensIssued += profitTokens;
             globalTokensPaidOut += profitTokens;
             totalTokensRemain -= profitTokens;
-            // user.properties.internalSwap += profitTokens * package.origin.properties.swapCoef;
-            // user.properties.tokensToBurn += profitTokens * package.origin.properties.burnCoef;
-            user.properties.profitPaymentsCount++;
+            // user.internalSwap += profitTokens * package.origin.swapCoef;
+            // user.tokensToBurn += profitTokens * package.origin.burnCoef;
+            user.profitPaymentsCount++;
             registerTransaction(system, user, profitTokens, 'token', 'packageProfit');
             if (package.periodsLeft === 0) {
                 //withdraw package from user's package list if the packege is paid out
                 // array.splice(index, 1);
                 package.isPaidOut = true;
             };
-            if (currentDay) user.properties.transactionHistory.push(new Transaction(profitTokens, currentDay.properties.index));
+            if (currentDay) user.transactionHistory.push(new Transaction(profitTokens, currentDay.index));
         }
         
         // totalTokenPaidProfit += tokenProfit;
@@ -164,7 +164,7 @@ const accruePackProfit = (user) => {
         
     });
 
-    if (user.properties.internalSwap) queue.add(user);   
+    if (user.internalSwap) queue.add(user);   
 }
 
 // const compliance = {
@@ -190,7 +190,7 @@ const getActions = (options) => {
 const getSwapTotal = () => {
     let total = 0;
     users.forEach((user) => {
-        total += user.properties.internalSwap;
+        total += user.internalSwap;
     });
     // console.log(total);
     return total;
@@ -199,7 +199,7 @@ const getSwapTotal = () => {
 const getBurnTotal = () => {
     let total = 0;
     users.forEach((user) => {
-        total += user.properties.tokensToBurn;
+        total += user.tokensToBurn;
     });
     // console.log(total);
     return total;
@@ -229,7 +229,7 @@ const getNewUsersCount = (parms) => {
     switch (parms.mode) {
         case 'ariphmetic':
             // console.log(parms.mode);
-            return parms.startNewUsersCount + parms.newUsersGrowthIncrease * currentCycle.properties.index;
+            return parms.startNewUsersCount + parms.newUsersGrowthIncrease * currentCycle.index;
             // break;
         case 'random':
              const randomItem = getRandomArrayItem(parms.values);
@@ -257,15 +257,15 @@ const changeSplit = (action, payload) => {
     }
 }
 
-const getPackage = (packagePrice) => packages.find((package) => package.properties.price === packagePrice);
+const getPackage = (packagePrice) => packages.find((package) => package.price === packagePrice);
 
 const activatePackage = (packagePrice) => {
     const packageToActivate = getPackage(packagePrice);
-    packageToActivate.properties.canBeBought = true;
+    packageToActivate.canBeBought = true;
 }
 
 const disablePackageImpactOnPrice = (packagePrice) => {
-    getPackage(packagePrice).properties.affectsThePrice = false;
+    getPackage(packagePrice).affectsThePrice = false;
 }
 
 
@@ -285,22 +285,22 @@ const accrueRefProfit = () => {
     const accrueRefToParent = (user, moneyProfit, coefIndex = 0 ) => {
         // console.log(coefIndex);
         // console.log(refProfitCoefs[coefIndex]);
-        // console.log(user.properties.parentRef);
-        if (!user.properties.parentRef || !refProfitCoefs[coefIndex]) {
+        // console.log(user.parentRef);
+        if (!user.parentRef || !refProfitCoefs[coefIndex]) {
             return;
         } else {
             // console.log('refProfitFrom = ' + moneyProfit);                
-            // parent.properties.moneyProfit += user.properties.tokenProfit * tokenPrice * refProfitCoefs[coefIndex];
-            const parent = user.properties.parentRef;
-            parent.properties.moneyIncome += moneyProfit * refProfitCoefs[coefIndex];
+            // parent.moneyProfit += user.tokenProfit * tokenPrice * refProfitCoefs[coefIndex];
+            const parent = user.parentRef;
+            parent.moneyIncome += moneyProfit * refProfitCoefs[coefIndex];
             globalMoneyBank -= moneyProfit * refProfitCoefs[coefIndex];
             
             accrueRefToParent(parent, moneyProfit, coefIndex + 1);
         }           
     }
     users.forEach((user) => {
-        // const moneyProfit = user.properties.tokenProfit * tokenPrice;
-        accrueRefToParent(user, user.properties.moneySpent);
+        // const moneyProfit = user.tokenProfit * tokenPrice;
+        accrueRefToParent(user, user.moneySpent);
     })        
 }
 

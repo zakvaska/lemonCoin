@@ -1,34 +1,32 @@
 class Day {
     constructor(index) {
-        this.properties = {
-            actions: [],
-            status: 'initial',
-            users: [],
-            index: index
-        }
+        this.actions = [];
+        this.status = 'initial';
+        this.users = [];
+        this.index = index;
     }
 
     addAction(action) {
-        this.properties.actions.push(action);
+        this.actions.push(action);
     }
 
     executeActions() {
-        this.properties.actions.forEach((action) => {
+        this.actions.forEach((action) => {
             action();
         })
     }
 
     open() {
-        this.properties.status = 'open';
+        this.status = 'open';
         currentDay = this;
     }
 
     close() {
-        this.properties.users.forEach((user) => {
+        this.users.forEach((user) => {
             user.buyAllPacks();
         });
 
-        if (this.properties.index === 15) {
+        if (this.index === 15) {
             boostedUsers.forEach((boostedUser) => {
                 accruePackProfit(boostedUser);
                 // console.log(boostedUser);
@@ -36,6 +34,6 @@ class Day {
         }
         
     
-        this.properties.status = 'closed';
+        this.status = 'closed';
     }
 }

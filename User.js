@@ -3,51 +3,51 @@ const boostedUsers = [];
 
 class User {
     constructor (parent) {
-        this.properties = {
-            purchasesCount: 0,
-            moneySpent: 0,
-            moneyIncome: 0,
-            refferalCount: 0,
-            parentRef: parent,
-            packages: [],
-            tokenAmount: 0,
-            purchasedTokens: 0,
-            profitTokens: 0,
-            internalSwap: 0,
-            tokensToBurn: 0,
-            boost: false,
-            transactionHistory: [],
-            id: ++lastID,
-            packageHistory: [],
-            packageSets: [],
-            profitPaymentsCount: 0,
-            redeemedTokens: 0
-        }
+        this.purchasesCount = 0;
+        this.moneySpent = 0;
+        this.moneyIncome = 0;
+        this.refferalCount = 0;
+        this.parentRef = parent;
+        this.packages = [];
+        this.tokenAmount = 0;
+        this.purchasedTokens = 0;
+        this.profitTokens = 0;
+        this.internalSwap = 0;
+        this.tokensToBurn = 0;
+        this.boost = false;
+        this.transactionHistory = [];
+        this.id = ++lastID;
+        this.packageHistory = [];
+        this.packageSets = [];
+        this.profitPaymentsCount = 0;
+        this.redeemedTokens = 0;
     }
 
     buyPackage(currentPack) {  
-        if (currentPack.properties.canBeBought) {
-            const packPrice = currentPack.properties.price;     
-            this.properties.purchasesCount++;        
-            this.properties.moneySpent += packPrice;
-            const purchasedTokens = (packPrice / tokenPrice) * currentPack.properties.bonus;
+        if (currentPack.canBeBought) {
+            const packPrice = currentPack.price;     
+            this.purchasesCount++;        
+            this.moneySpent += packPrice;
+            const purchasedTokens = (packPrice / tokenPrice) * currentPack.bonus;
 
-            this.properties.packages.push(new UserPackage(currentPack, purchasedTokens));
-            this.properties.tokenAmount += purchasedTokens;
-            this.properties.purchasedTokens += purchasedTokens;
-            // this.properties.internalSwap += purchasedTokens * currentPack.properties.swapCoef;
-            // this.properties.tokensToBurn += purchasedTokens * currentPack.properties.freezeCoef;
+            this.packages.push(new UserPackage(currentPack, purchasedTokens));
+            this.tokenAmount += purchasedTokens;
+            this.purchasedTokens += purchasedTokens;
+            // this.internalSwap += purchasedTokens * currentPack.swapCoef;
+            // this.tokensToBurn += purchasedTokens * currentPack.freezeCoef;
             let tokensFromSystem = 0;
             if (isFirstCycle) {
                 tokensFromSystem = purchasedTokens;
                 registerTransaction(system, this, tokensFromSystem, 'token', 'issue');
             } else {
-                tokensFromSystem = purchasedTokens * (1 - currentPack.properties.redeemFromSwap);
+                tokensFromSystem = purchasedTokens * (1 - currentPack.redeemFromSwap);
                 registerTransaction(system, this, tokensFromSystem, 'token', 'partialIssue');
-                const diff = redeemTokensFromSwap(purchasedTokens * currentPack.properties.redeemFromSwap, this);
+                const diff = redeemTokensFromSwap(purchasedTokens * currentPack.redeemFromSwap, this);
                 //internal swap summary is not enough to supplement package purchase
                 if (diff > 0) {
                     tokensFromSystem += diff;
+                    globalTokensIssued += diff;
+                    globalTokensSold += diff;
                     registerTransaction(system, this, diff, 'token', 'redemptionCompensation');
                 }
             }
@@ -59,10 +59,10 @@ class User {
             globalTokensSold += tokensFromSystem;
             totalTokensRemain -= tokensFromSystem;
 
-            currentTest.properties.current.moneyEarned += tokensFromSystem * tokenPrice;
-            currentTest.properties.current.tokensSold = globalTokensIssued;
+            currentTest.current.moneyEarned += tokensFromSystem * tokenPrice;
+            currentTest.current.tokensSold = globalTokensIssued;
             
-            if (currentPack.properties.affectsThePrice) globalIterationCoef += currentPack.properties.iterationCoef;
+            if (currentPack.affectsThePrice) globalIterationCoef += currentPack.iterationCoef;
             
             // console.log('purchase!');
             checkCoef();
@@ -71,7 +71,7 @@ class User {
 
     buyRandomPackage() {        
         const packageId = getRandomPackageId();
-        // console.log(packages[packageId].properties.price);
+        // console.log(packages[packageId].price);
         this.buyPackage(packageId);                
     }
 
@@ -84,9 +84,9 @@ class User {
     }
 
     buyPackageSet(lastPackageInSetPrice) {
-        // const packageSet = packages.filter((userPackage) => userPackage.origin.properties.price <= lastPackageInSetPrice);
+        // const packageSet = packages.filter((userPackage) => userPackage.origin.price <= lastPackageInSetPrice);
         packageSets[lastPackageInSetPrice].forEach((pack) => this.buyPackage(pack));
-        this.properties.packageSets.push(packageSets[lastPackageInSetPrice]);
+        this.packageSets.push(packageSets[lastPackageInSetPrice]);
     }
 
     buyRandomPackageSet() {
@@ -98,7 +98,7 @@ class User {
     inviteFriend() {
         const newUser = new User(this);
         users.push(newUser);
-        this.properties.refferalCount++;
+        this.refferalCount++;
     }
 
 }
