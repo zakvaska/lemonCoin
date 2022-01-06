@@ -21,6 +21,8 @@ class User {
         this.packageSets = [];
         this.profitPaymentsCount = 0;
         this.redeemedTokens = 0;
+        this.unlockedTokens = 0;
+        this.unlocksCount = 0;
     }
 
     buyPackage(currentPack) {  

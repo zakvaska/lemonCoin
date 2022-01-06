@@ -133,7 +133,7 @@ const accruePackProfit = (user) => {
     
     // console.log(user);
     user.packages.forEach((package, index, array) => {
-        if (!package.isPaidOut) {
+        if (!package.isProfitPaidOut) {
             // console.log('accruePackProfitToUser');
             // const moneyProfit = package.origin.price * package.origin.profitRate;
             // let profitTokens = moneyProfit / tokenPrice;
@@ -156,9 +156,25 @@ const accruePackProfit = (user) => {
             if (package.periodsLeft === 0) {
                 //withdraw package from user's package list if the packege is paid out
                 // array.splice(index, 1);
-                package.isPaidOut = true;
+                package.isProfitPaidOut = true;
             };
             if (currentDay) user.transactionHistory.push(new Transaction(profitTokens, currentDay.index));
+        } else if (!package.isBodyPaidOut) {
+  
+            let tokensToUnlock = package.purchasedTokens * package.origin.bodyUnlockRate;
+            if (package.lockedTokens < tokensToUnlock) {
+                tokensToUnlock = package.lockedTokens;
+                package.isBodyPaidOut = true;
+            }
+
+            user.profitTokens += tokensToUnlock;
+            // user.internalSwap += profitTokens;
+            user.unlockedTokens += tokensToUnlock;
+            package.unlockTokens(tokensToUnlock);
+            user.internalSwap += tokensToUnlock * package.origin.swapCoef;
+            user.tokensToBurn += tokensToUnlock * package.origin.burnCoef;
+
+            user.unlocksCount++;
         }
         
         // totalTokenPaidProfit += tokenProfit;

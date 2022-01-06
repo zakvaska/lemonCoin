@@ -1,5 +1,5 @@
 class Package {
-    constructor(price, iterationCoef, profitRate, swapCoef, redeemFromSwap, canBeBought, bonus = 0, periodsAmount) {
+    constructor(price, iterationCoef, profitRate, swapCoef, redeemFromSwap, canBeBought, bonus = 0, periodsAmount, bodyUnlockRate) {
         this.price = price;
         this.iterationCoef = iterationCoef;
         this.profitRate = profitRate;
@@ -10,6 +10,7 @@ class Package {
         this.redeemFromSwap = redeemFromSwap;
         this.bonus = bonus + 1;
         this.periodsAmount = periodsAmount;
+        this.bodyUnlockRate = bodyUnlockRate;
     }
 
     turnOffBurn() {
@@ -44,7 +45,15 @@ class UserPackage {
         this.origin = pack;
         this.purchasedTokens = purchasedTokens;
         this.periodsLeft = pack.periodsAmount;
-        this.isPaidOut = false;
+        this.isProfitPaidOut = false;
+        this.isBodyPaidOut = false;
+        this.lockedTokens = purchasedTokens;
+        this.unlockedTokens = 0;
+    }
+
+    unlockTokens(amount) {
+        this.lockedTokens -= amount;
+        this.unlockedTokens += amount;
     }
 }
 
