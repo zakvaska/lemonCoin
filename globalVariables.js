@@ -8,11 +8,14 @@ let globalTurnover = 0;
 // let totalPackagesSold = 0;
 let globalIterationCoef = 0;
 let globalTransCount = 0;
+let globalTokensIssued = 0;
 let globalTokensSold = 0;
+let globalTokensPaidOut = 0;
 
 let totalPackPurchases = 0;
 // let stageTokensSold = 0;
 let lastStageTokensSold = 0;
+let globalRedeemedTokens = 0;
 
 // let totalTokenPaidProfit = 0;
 
@@ -77,6 +80,7 @@ class ExternalProjects {
         if (diff > 0) {
             registerTransaction(system, externalProjects, diff, 'token', 'redemptionCompensation');
             globalMoneyBank += diff * tokenPrice;
+            globalTurnover += diff * tokenPrice;
             globalTransCount++;
 
             currentTest.properties.current.moneyEarned += diff * tokenPrice;

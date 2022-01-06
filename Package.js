@@ -40,7 +40,7 @@ class UserPackage {
     constructor(pack, purchasedTokens) {
         this.origin = pack;
         this.purchasedTokens = purchasedTokens;
-        this.periodsLeft = pack.periodsAmount
+        this.periodsLeft = pack.properties.periodsAmount;
         this.isPaidOut = false;
     }
 }

@@ -19,7 +19,9 @@ class User {
             transactionHistory: [],
             id: ++lastID,
             packageHistory: [],
-            packageSets: []
+            packageSets: [],
+            profitPaymentsCount: 0,
+            redeemedTokens: 0
         }
     }
 
@@ -53,11 +55,12 @@ class User {
             globalMoneyBank += tokensFromSystem * tokenPrice;
             globalTurnover += packPrice;
             globalTransCount++;
+            globalTokensIssued += tokensFromSystem;
             globalTokensSold += tokensFromSystem;
             totalTokensRemain -= tokensFromSystem;
 
             currentTest.properties.current.moneyEarned += tokensFromSystem * tokenPrice;
-            currentTest.properties.current.tokensSold = globalTokensSold;
+            currentTest.properties.current.tokensSold = globalTokensIssued;
             
             if (currentPack.properties.affectsThePrice) globalIterationCoef += currentPack.properties.iterationCoef;
             

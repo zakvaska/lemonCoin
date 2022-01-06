@@ -2,13 +2,16 @@ console.log('globalIterationCoef = ' + globalIterationCoef);
 // console.log('tokenPrice = ' + new Intl.NumberFormat('ru-RU').format(tokenPrice.toFixed(2)));
 console.log('tokenPrice = ' + tokenPrice);
 console.log('startTokenCount = ' + new Intl.NumberFormat('ru-RU').format(startTokenCount.toFixed(2)));
+console.log('globalTokensIssued = ' + new Intl.NumberFormat('ru-RU').format(globalTokensIssued.toFixed(2)));
 console.log('globalTokensSold = ' + new Intl.NumberFormat('ru-RU').format(globalTokensSold.toFixed(2)));
-// console.log('globalTokensSold = ' + globalTokensSold);
+console.log('globalTokensPaidOut = ' + new Intl.NumberFormat('ru-RU').format(globalTokensPaidOut.toFixed(2)));
+// console.log('globalTokensIssued = ' + globalTokensIssued);
 // console.log('totalTokenPaidProfit = ' + new Intl.NumberFormat('ru-RU').format(totalTokenPaidProfit.toFixed(2)));
 console.log('totalTokensRemain = ' + new Intl.NumberFormat('ru-RU').format(totalTokensRemain.toFixed(2)));
 console.log('totalPackPurchases = ' + totalPackPurchases);
 console.log('globalMoneyBank = ' + new Intl.NumberFormat('ru-RU').format(globalMoneyBank.toFixed(2)) + ' $');
 console.log('globalTurnover = ' + new Intl.NumberFormat('ru-RU').format(globalTurnover.toFixed(2)) + ' $');
+console.log('globalRedeemedTokens = ' + new Intl.NumberFormat('ru-RU').format(globalRedeemedTokens.toFixed(2)));
 
 console.log(stages);
 console.log(users);

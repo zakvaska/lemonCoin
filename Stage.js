@@ -2,17 +2,17 @@ class Stage {
     constructor () {
     this.properties = {  
         transCount: globalTransCount,      
-        tokensSold: globalTokensSold - lastStageTokensSold,        
+        tokensSold: globalTokensIssued - lastStageTokensSold,        
         price: tokenPrice
     }
     totalPackPurchases += globalTransCount;
-    // globalTokensSold += tokensSold;
+    // globalTokensIssued += tokensSold;
     tokenPrice += step;
     new Event(eventTypes.price, round3(tokenPrice));
     globalIterationCoef = 0;
     // globalTransCount = 0;
     // stageTokensSold = 0;
-    lastStageTokensSold = globalTokensSold;
+    lastStageTokensSold = globalTokensIssued;
   }
 }
 

@@ -50,11 +50,11 @@ var addMainUsers = (newMainUsersCount, boostedUsersGoal) => {
     }
 }
 
-const registerTransaction = (seller, buyer, amount, currency, type) => {
+const registerTransaction = (seller, buyer, amount, product, type) => {
     // console.log(seller);
     // console.log(buyer);
     // console.log(amount);
-    const newTransacton = new Transaction(amount, 0, currentCycle.properties.index, currency, type, seller, seller.properties.id, buyer, buyer.properties.id);
+    const newTransacton = new Transaction(amount, 0, currentCycle.properties.index, product, type, seller, seller.properties.id, buyer, buyer.properties.id);
     seller.properties.transactionHistory.push(newTransacton);
     buyer.properties.transactionHistory.push(newTransacton);
     // console.log(new Transaction(amount, 0, 'token', 1));
@@ -77,6 +77,8 @@ const redeemTokensFromSwap = (tokensToRedeem, buyer, callIndexParm = 0) => {
         firstUserInQueue.properties.internalSwap -= redeemedTokens;
         // console.log(tokensToRedeem * tokenPrice);
         firstUserInQueue.properties.moneyIncome += redeemedTokens * tokenPrice;
+        firstUserInQueue.properties.redeemedTokens += redeemedTokens;
+        globalRedeemedTokens += redeemedTokens;
         registerTransaction(firstUserInQueue, buyer, redeemedTokens, 'token', 'partialRedemption');
         return diff;
     } else if (diff === 0) {
@@ -85,6 +87,8 @@ const redeemTokensFromSwap = (tokensToRedeem, buyer, callIndexParm = 0) => {
         const redeemedTokens = firstUserInQueue.properties.internalSwap;
         firstUserInQueue.properties.internalSwap = 0;
         firstUserInQueue.properties.moneyIncome += redeemedTokens * tokenPrice;
+        firstUserInQueue.properties.redeemedTokens += redeemedTokens;
+        globalRedeemedTokens += redeemedTokens;
         registerTransaction(firstUserInQueue, buyer, redeemedTokens, 'token', 'fullRedemption');
         // console.log('delete');
         queue.delete(firstUserInQueue);
@@ -96,6 +100,8 @@ const redeemTokensFromSwap = (tokensToRedeem, buyer, callIndexParm = 0) => {
         const redeemedTokens = firstUserInQueue.properties.internalSwap;
         firstUserInQueue.properties.internalSwap = 0;
         firstUserInQueue.properties.moneyIncome += redeemedTokens * tokenPrice;
+        firstUserInQueue.properties.redeemedTokens += redeemedTokens;
+        globalRedeemedTokens += redeemedTokens;
         registerTransaction(firstUserInQueue, buyer, redeemedTokens, 'token', 'fullRedemption');
         // console.log('delete');
         queue.delete(firstUserInQueue);
@@ -129,14 +135,21 @@ const accruePackProfit = (user) => {
             // const moneyProfit = package.origin.properties.price * package.origin.properties.profitRate;
             // let profitTokens = moneyProfit / tokenPrice;
             let profitTokens = package.purchasedTokens * package.origin.properties.profitRate;
-            if (package.lockedTokens < profitTokens) profitTokens = package.lockedTokens;
-            package.lockedTokens -= profitTokens;
+            // if (package.lockedTokens < profitTokens) profitTokens = package.lockedTokens;
+            // package.lockedTokens -= profitTokens;
             // if (user.properties.lockedTokens < profitTokens) profitTokens = user.properties.lockedTokens;
-            user.properties.periodsLeft--;
+            package.periodsLeft--;
             user.properties.profitTokens += profitTokens;
             user.properties.internalSwap += profitTokens;
+
+            // globalTransCount++;
+            globalTokensIssued += profitTokens;
+            globalTokensPaidOut += profitTokens;
+            totalTokensRemain -= profitTokens;
             // user.properties.internalSwap += profitTokens * package.origin.properties.swapCoef;
             // user.properties.tokensToBurn += profitTokens * package.origin.properties.burnCoef;
+            user.properties.profitPaymentsCount++;
+            registerTransaction(system, user, profitTokens, 'token', 'packageProfit');
             if (package.periodsLeft === 0) {
                 //withdraw package from user's package list if the packege is paid out
                 // array.splice(index, 1);
