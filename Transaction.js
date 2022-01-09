@@ -1,5 +1,6 @@
 class Transaction {
-    constructor(amount, day, cycleIndex, product, type, source, sourceID, target, targetID) {
+    constructor(id, amount, day, cycleIndex, product, type, source, sourceID, target, targetID) {
+        this.id = id;
         this.amount = amount;
         this.day = day;
         this.cycleIndex = cycleIndex;
@@ -10,5 +11,6 @@ class Transaction {
         this.sourceID = sourceID;
         this.target = target;
         this.targetID = targetID;
+        this.terminatedCycle = terminateCycle;
     }
 }

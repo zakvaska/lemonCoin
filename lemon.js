@@ -31,8 +31,8 @@ const actionTemplates = [
     new ActionTemplate({entityName: '', actionName: 'addMainUsers', parmNames: ['newUsersPerCycle']}),
     // new ActionTemplate({entityName: 'currentCycle', actionName: 'cycleNewUsersBuyAllPacks', parmNames: []})
     new ActionTemplate({entityName: 'currentCycle', actionName: 'cycleNewUsersBuyDifferentRandomPackSets', parmNames: []}),
-    new ActionTemplate({entityName: 'externalProjects', actionName: 'redeem', parmNames: []})
-    // new ActionTemplate({entityName: '', actionName: 'accruePackProfitToAll', parmNames: []})
+    new ActionTemplate({entityName: 'externalProjects', actionName: 'redeem', parmNames: []}),
+    new ActionTemplate({entityName: '', actionName: 'accruePackProfitToAll', parmNames: []})
 ]
 
 step = 0.001;
@@ -41,6 +41,7 @@ split = 1000;
 startTokenCount = 100000000;
 totalTokensRemain = startTokenCount;
 redemptionByExternalProjects = 100000;
+transactionLogging = true;
 
 const goal = {
     // userCount: 1000,

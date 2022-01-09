@@ -11,6 +11,7 @@ let globalTransCount = 0;
 let globalTokensIssued = 0;
 let globalTokensSold = 0;
 let globalTokensPaidOut = 0;
+let globalRedemptionCompansation = 0;
 
 let totalPackPurchases = 0;
 // let stageTokensSold = 0;
@@ -27,7 +28,12 @@ var currentCycle;
 var currentDay;
 var currentOptions;
 
+var transactionLogging;
+
+var terminateCycle = false;
+
 let lastID = 0;
+let transactionId = 0;
 
 const refProfitCoefs = [
     0.1,
@@ -81,6 +87,8 @@ class ExternalProjects {
             globalTokensIssued += diff;
             globalTokensSold += diff;
             globalTransCount++;
+            totalTokensRemain -= diff;
+            globalRedemptionCompansation += diff;
 
             currentTest.current.moneyEarned += diff * tokenPrice;
         }

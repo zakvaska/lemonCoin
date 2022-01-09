@@ -48,8 +48,10 @@ class User {
                 //internal swap summary is not enough to supplement package purchase
                 if (diff > 0) {
                     tokensFromSystem += diff;
-                    globalTokensIssued += diff;
-                    globalTokensSold += diff;
+                    // globalTokensIssued += diff;
+                    // globalTokensSold += diff;
+                    // totalTokensRemain -= diff;
+                    globalRedemptionCompansation += diff;
                     registerTransaction(system, this, diff, 'token', 'redemptionCompensation');
                 }
             }
@@ -62,12 +64,18 @@ class User {
             totalTokensRemain -= tokensFromSystem;
 
             currentTest.current.moneyEarned += tokensFromSystem * tokenPrice;
-            currentTest.current.tokensSold = globalTokensIssued;
+            currentTest.current.tokensSold = globalTokensSold;
             
             if (currentPack.affectsThePrice) globalIterationCoef += currentPack.iterationCoef;
             
             // console.log('purchase!');
             checkCoef();
+            if (totalTokensRemain <= 0) {
+                // console.log(totalTokensRemain);
+                // console.log(currentCycle.index);
+                // console.log(this.id);
+                terminateCycle = true;
+            }
         }
     }
 

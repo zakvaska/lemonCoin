@@ -51,13 +51,15 @@ var addMainUsers = (newMainUsersCount, boostedUsersGoal) => {
 }
 
 const registerTransaction = (seller, buyer, amount, product, type) => {
-    // console.log(seller);
-    // console.log(buyer);
-    // console.log(amount);
-    const newTransacton = new Transaction(amount, 0, currentCycle.index, product, type, seller, seller.id, buyer, buyer.id);
-    seller.transactionHistory.push(newTransacton);
-    buyer.transactionHistory.push(newTransacton);
-    // console.log(new Transaction(amount, 0, 'token', 1));
+    if (transactionLogging) {
+        // console.log(seller);
+        // console.log(buyer);
+        // console.log(amount);
+        const newTransacton = new Transaction(transactionId++, amount, 0, currentCycle.index, product, type, seller, seller.id, buyer, buyer.id);
+        seller.transactionHistory.push(newTransacton);
+        buyer.transactionHistory.push(newTransacton);
+        // console.log(new Transaction(amount, 0, 'token', 1));    
+    } else null;
 }
 
 const maxCalls = 1000;
@@ -124,8 +126,15 @@ const redeemTokensFromSwap = (tokensToRedeem, buyer, callIndexParm = 0) => {
 
 var accruePackProfitToAll = () => {
     // console.log('accruePackProfitToAll ' + users.length);
-    users.forEach((user) => {
+    users.every((user, index, array) => {
         accruePackProfit(user);
+        if (!terminateCycle) {
+            return true;
+        } else {
+            console.log(`tokens have run out when the profit is paid. The process stopped at ${index} of ${array.length}`);
+            // console.log(index);
+            // console.log(array);
+        }
     });
 }
 
@@ -183,7 +192,13 @@ const accruePackProfit = (user) => {
         
     });
 
-    if (user.internalSwap) queue.add(user);   
+    if (user.internalSwap) queue.add(user);
+    if (totalTokensRemain <= 0) {
+        // console.log(totalTokensRemain);
+        // console.log(currentCycle.index);
+        // console.log(user.id);
+        terminateCycle = true;
+    }
 }
 
 // const compliance = {

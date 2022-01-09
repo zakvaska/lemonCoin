@@ -48,7 +48,7 @@ class Cycle {
         // console.log(instantActions);
         let i;
         for (i = 0; i < instantActions.length; i++) {
-            instantActions[i]();
+            if (!terminateCycle) instantActions[i]();
         }
     }
 
@@ -58,11 +58,13 @@ class Cycle {
         this.tokensSoldStart = globalTokensIssued;
         this.internalSwapStart = getSwapTotal();
         this.tokensToBurnStart = getBurnTotal();
+        this.tokensPaidOutStart = globalTokensPaidOut;
+        this.redemptionCompansationStart = globalRedemptionCompansation;
         return this;
     }
 
     closeCycle = () => {
-        accruePackProfitToAll();
+        // accruePackProfitToAll();
         this.status = 'closed';
         this.endTokenPrice = tokenPrice;
         this.tokensSoldEnd = globalTokensIssued;
@@ -72,6 +74,10 @@ class Cycle {
         this.tokensToBurnEnd = getBurnTotal();
         this.tokensToBurnDiff = this.tokensToBurnEnd - this.tokensToBurnStart;
         this.totalUsersCount = users.length;
+        this.tokensPaidOutEnd = globalTokensPaidOut;
+        this.tokensPaidOutDiff = this.tokensPaidOutEnd - this.tokensPaidOutStart;
+        this.redemptionCompansationEnd = globalRedemptionCompansation;
+        this.redemptionCompansationDiff = this.redemptionCompansationEnd - this.redemptionCompansationStart;
         if (isFirstCycle) isFirstCycle = false;
         return this;
     }
@@ -105,10 +111,27 @@ class Cycle {
     }
 
     cycleNewUsersBuyDifferentRandomPackSets = () => {
-
-        this.users.forEach((user) => {
+        
+        this.users.every((user, index, array) => {
+            // console.log(terminateCycle);
+            // if (terminateCycle) return false;
             user.buyRandomPackageSet();
+            if (!terminateCycle) {
+                return true;
+            } else {
+                console.log(`tokens have run out when purchasing a package The process stopped at ${index} of ${array.length}`);
+            }
         });
+
+        // try {
+        //     this.users.forEach((user) => {
+        //         console.log(terminateCycle);
+        //         if (terminateCycle) throw new Error('errrrrrrr');
+        //         user.buyRandomPackageSet();
+        //     });
+        // } catch (error) {
+        //     console.error(error);
+        // }
         this.queueSize = queue.size;
     }
 }

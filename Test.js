@@ -62,7 +62,7 @@ Test.prototype.run = function() {
         // cycle.runScenario();
         // cycle.closeCycle();
         // console.log(steps[0]); 
-        shouldContinue = this.checkRestrictions(this.goal);
+        shouldContinue = this.checkRestrictions(this.goal) && !terminateCycle;
     }
    
 }
