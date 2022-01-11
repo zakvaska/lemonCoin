@@ -18,6 +18,7 @@ let totalPackPurchases = 0;
 let lastStageTokensSold = 0;
 let globalRedeemedTokens = 0;
 let usersRedemptionProfit = 0;
+let globalInternalSwap = 0;
 
 // let totalTokenPaidProfit = 0;
 
@@ -49,7 +50,8 @@ const refProfitCoefs = [
 
 let isFirstCycle = true;
 
-const queue = new Set();
+const salesQueue = new Set();
+const purchaseQueue = new Set();
 
 
 class System {
@@ -75,49 +77,5 @@ const eventTypes = {
         variable: 'globalTokensSold'
     }
 }
-
-class ExternalProjects {
-    constructor() {
-        this.id = -1;
-        this.transactionHistory = [];
-        this.tokensPurchased = 0;
-        console.log(this);
-    }
-    
-    redeem() {
-        const tokensAmount = redemptionByExternalProjects / tokenPrice;
-        const diff = redeemTokensFromSwap(tokensAmount, externalProjects);
-        // if (diff > 0) {
-        //     registerTransaction(system, externalProjects, diff, 'token', 'redemptionCompensation');
-        //     globalMoneyBank += diff * tokenPrice;
-        //     globalTurnover += diff * tokenPrice;
-        //     globalTokensIssued += diff;
-        //     globalTokensSold += diff;
-        //     globalTransCount++;
-        //     totalTokensRemain -= diff;
-        //     globalRedemptionCompansation += diff;
-
-        //     currentTest.current.moneyEarned += diff * tokenPrice;
-        // }
-        // externalProjects.tokensPurchased += tokensAmount;
-
-        // console.log('redeem');
-        // console.log(this);
-        // const tokensAmount = redemptionByExternalProjects / tokenPrice;
-        // const diff = redeemTokensFromSwap(tokensAmount, this);
-        // if (diff > 0) {
-        //     registerTransaction(system, this, diff, 'token', 'redemptionCompensation');
-        //     globalMoneyBank += diff * tokenPrice;
-        //     globalTurnover += packPrice;
-        //     globalTransCount++;
-
-        //     currentTest.current.moneyEarned += diff * tokenPrice;
-        // }
-        // this.tokensPurchased += tokensAmount;
-    }
-}
-
-
-var externalProjects = new ExternalProjects();
 
 var redemptionByExternalProjects;

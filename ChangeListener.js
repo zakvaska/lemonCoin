@@ -11,7 +11,7 @@ class ChangeListener {
     }
 
     executeAction() {
-        console.log(`${this.message} ${this.eventType} because new value ${window[eventTypes[this.eventType].variable]} >= ${this.triggerValue}`);
+        console.log(`${this.message} because new ${this.eventType} value ${window[eventTypes[this.eventType].variable]} >= ${this.triggerValue}`);
         this.operationCounter++;
         this.handler();
         this.executed = true;

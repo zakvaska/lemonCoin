@@ -13,10 +13,12 @@ console.log('globalMoneyBank = ' + new Intl.NumberFormat('ru-RU').format(globalM
 console.log('globalTurnover = ' + new Intl.NumberFormat('ru-RU').format(globalTurnover.toFixed(2)) + ' $');
 console.log('globalRedeemedTokens = ' + new Intl.NumberFormat('ru-RU').format(globalRedeemedTokens.toFixed(2)));
 console.log('usersRedemptionProfit = ' + new Intl.NumberFormat('ru-RU').format(usersRedemptionProfit.toFixed(2)) + ' $');
+console.log('globalInternalSwap = ' + new Intl.NumberFormat('ru-RU').format(globalInternalSwap.toFixed(2)));
 
 console.log(stages);
 console.log(users);
-console.log(queue);
+console.log(salesQueue);
+console.log(purchaseQueue);
 console.log(system);
 console.log(events);
 console.log(currentOptions);

@@ -98,8 +98,8 @@ complex global parameters:
       
       
 When users buy tokens it causes a token price growth by increasing global iteration coeficient. In the beginning all of purchased tokens are locked. 
-In the end of every cycle a part of locked tokens gets unlocked. Part of unlocked tokens will be putted in an internal swap and redemption queue and other tokens 
+In the end of every cycle a part of locked tokens gets unlocked. Part of unlocked tokens will be putted in an internal swap and redemption salesQueue and other tokens 
 will be putted into burn swap to be used in external projects. For the first cycle all tokens that users buy are from system's bank, but then a redemption mechanism 
 starts to work.
 in package purchase is provided by token redemption from other users' internal swaps. A redemption order is defined by
-redemption queue that is working by FIFO principe. In the end of every cycle the system unlocks to users  
+redemption salesQueue that is working by FIFO principe. In the end of every cycle the system unlocks to users  

@@ -65,18 +65,23 @@ const registerTransaction = (seller, buyer, amount, product, type) => {
 const maxCalls = 1000;
 
 const redeemTokensFromSwap = (tokensToRedeem, buyer, callIndexParm = 0) => {
+    if (globalInternalSwap < tokensToRedeem) return tokensToRedeem - globalInternalSwap;
+    // console.log(tokensToRedeem);
     // console.log('redeemTokensFromSwap ' + tokensToRedeem);
     const callIndex = callIndexParm;
-    const iterator = queue.values();
+    const iterator = salesQueue.values();
     let firstUserInQueue = iterator.next().value;
     if (buyer === firstUserInQueue) firstUserInQueue = iterator.next().value;
     if (!firstUserInQueue) return tokensToRedeem;
     const diff = tokensToRedeem - firstUserInQueue.internalSwap;
     // console.log(diff);
     if (diff < 0) {
-        //successfull package purchase using (first user's in queue internal swap)*, but less than need to redeem all tokens from * 
+        //successfull package purchase using (first user's in salesQueue internal swap)*, but less than need to redeem all tokens from * 
         const redeemedTokens = tokensToRedeem;
         firstUserInQueue.internalSwap -= redeemedTokens;
+        // console.log(redeemedTokens);
+        globalInternalSwap -= redeemedTokens;
+        // console.log(globalInternalSwap);
         // console.log(tokensToRedeem * tokenPrice);
         firstUserInQueue.moneyIncome += redeemedTokens * tokenPrice;
         usersRedemptionProfit += redeemedTokens * tokenPrice;
@@ -85,31 +90,34 @@ const redeemTokensFromSwap = (tokensToRedeem, buyer, callIndexParm = 0) => {
         registerTransaction(firstUserInQueue, buyer, redeemedTokens, 'token', 'partialRedemption');
         return diff;
     } else if (diff === 0) {
-        //successfull package purchase using (first user's in queue internal swap)*, and enough to redeem all tokens from * 
+        //successfull package purchase using (first user's in salesQueue internal swap)*, and enough to redeem all tokens from * 
         // console.log(tokensToRedeem * tokenPrice);
         const redeemedTokens = firstUserInQueue.internalSwap;
         firstUserInQueue.internalSwap = 0;
+        globalInternalSwap -= redeemedTokens;
         firstUserInQueue.moneyIncome += redeemedTokens * tokenPrice;
         usersRedemptionProfit += redeemedTokens * tokenPrice;
         firstUserInQueue.redeemedTokens += redeemedTokens;
         globalRedeemedTokens += redeemedTokens;
         registerTransaction(firstUserInQueue, buyer, redeemedTokens, 'token', 'fullRedemption');
         // console.log('delete');
-        queue.delete(firstUserInQueue);
+        salesQueue.delete(firstUserInQueue);
         return diff;
-    } else if (diff > 0) {
-        //not enough tokens from (first user's in queue internal swap)* => 
-        // redeem all tokens from * and repeat for the next user in queue to redeem remaining tokens
+    } 
+    else if (diff > 0) {
+        //not enough tokens from (first user's in salesQueue internal swap)* => 
+        // redeem all tokens from * and repeat for the next user in salesQueue to redeem remaining tokens
         // console.log(tokensToRedeem * tokenPrice);
         const redeemedTokens = firstUserInQueue.internalSwap;
         firstUserInQueue.internalSwap = 0;
+        globalInternalSwap -= redeemedTokens;
         firstUserInQueue.moneyIncome += redeemedTokens * tokenPrice;
         usersRedemptionProfit += redeemedTokens * tokenPrice;
         firstUserInQueue.redeemedTokens += redeemedTokens;
         globalRedeemedTokens += redeemedTokens;
         registerTransaction(firstUserInQueue, buyer, redeemedTokens, 'token', 'fullRedemption');
         // console.log('delete');
-        queue.delete(firstUserInQueue);
+        salesQueue.delete(firstUserInQueue);
         if (callIndex >= maxCalls) {
             // console.log('setTimeout');
             return setTimeout(redeemTokensFromSwap, 0, diff, buyer);
@@ -154,6 +162,7 @@ const accruePackProfit = (user) => {
             user.profitTokens += profitTokens;
             // user.internalSwap += profitTokens;
             user.internalSwap += profitTokens * package.origin.swapCoef;
+            globalInternalSwap += profitTokens * package.origin.swapCoef;
             user.tokensToBurn += profitTokens * package.origin.burnCoef;
 
             // globalTransCount++;
@@ -192,7 +201,7 @@ const accruePackProfit = (user) => {
         
     });
 
-    if (user.internalSwap) queue.add(user);
+    if (user.internalSwap) salesQueue.add(user);
     if (totalTokensRemain <= 0) {
         // console.log(totalTokensRemain);
         // console.log(currentCycle.index);
@@ -360,3 +369,45 @@ const turnOffBurn = () => {
         package.turnOffBurn();
     })
 }
+
+
+var devastatePurchaseQueue = () => {
+    if (purchaseQueue.size) {    
+        // console.log(purchaseQueue.size);
+        console.log('devastate on cycle ' + currentCycle.index);
+        const purchaseQueueIterator = purchaseQueue.values();
+        let firstEntityInQueue = purchaseQueueIterator.next().value;
+        // firstEntityInQueue = iterator.next().value;//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if (firstEntityInQueue instanceof ExternalProjects) {
+            // console.log('Ext');
+            const deferredTokens = firstEntityInQueue.redeem(firstEntityInQueue.deferredTokens);
+            if (deferredTokens === 0) {
+                purchaseQueue.delete(firstEntityInQueue);
+                console.log('delete');
+                globalInternalSwap && devastatePurchaseQueue();
+            } else {
+                return;
+            }
+        } else if (firstEntityInQueue instanceof User) {
+            console.log(firstEntityInQueue);
+            firstEntityInQueue.deferredPackages.forEach((package, index, array) => {
+                const success = firstEntityInQueue.buyPackage(package.origin);
+                console.log(success);
+                if (success) array.shift();
+            });
+            if (!firstEntityInQueue.deferredPackages.length) {
+                purchaseQueue.delete(firstEntityInQueue);
+                console.log('devastate user');
+                console.log(globalInternalSwap);
+                globalInternalSwap && devastatePurchaseQueue();
+            } else return;
+        }
+    }
+}
+
+const checkPackPurchasePossibility = (package) => {
+    const tokensFromSwap = (package.price / tokenPrice) * package.bonus * package.redeemFromSwap;
+    return isFirstCycle || package.canBeBought && tokensFromSwap <= globalInternalSwap;
+}
+
+const getTokensForExtProjectsCount = () => redemptionByExternalProjects / tokenPrice;

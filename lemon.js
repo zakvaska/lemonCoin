@@ -1,14 +1,14 @@
 
 // constructor(price, iterationCoef, profitRate, swapCoef, redeemFromSwap, canBeBought, bonus, periodsAmount, bodyUnlockRate)
 // packages.push(new Package(10, 0.2, 0.24, 0.1, 0.3, true, 0.7, 12));
-packages.push(new Package(10, 0.2, 0.24, 0.1, 0.3, true, 0, 12, 0.1));
-packages.push(new Package(20, 0.3, 0.24, 0.15, 0.3, true, 0, 12, 0.1));
-packages.push(new Package(40, 0.5, 0.24, 0.2, 0.3, true, 0, 12, 0.1));
-packages.push(new Package(80, 1, 0.24, 0.25, 0.3, true, 0, 12, 0.1));
-packages.push(new Package(160, 1, 0.24, 0.3, 0.3, true, 0, 12, 0.1));
-packages.push(new Package(320, 1, 0.24, 0.35, 0.3, true, 0, 12, 0.1));
-packages.push(new Package(640, 1, 0.184, 0.4, 0.3, false, 0, 12, 0.1));
-packages.push(new Package(1280, 1, 0.198, 0.45, 0.3, false, 0, 12, 0.1));
+packages.push(new Package(10, 0.2, 0.24, 1, 0.3, true, 0, 12, 0.1));
+packages.push(new Package(20, 0.3, 0.24, 1, 0.3, true, 0, 12, 0.1));
+packages.push(new Package(40, 0.5, 0.24, 1, 0.3, true, 0, 12, 0.1));
+packages.push(new Package(80, 1, 0.24, 1, 0.3, true, 0, 12, 0.1));
+packages.push(new Package(160, 1, 0.24, 1, 0.3, true, 0, 12, 0.1));
+packages.push(new Package(320, 1, 0.24, 1, 0.3, true, 0, 12, 0.1));
+packages.push(new Package(640, 1, 0.184, 1, 0.3, false, 0, 12, 0.1));
+packages.push(new Package(1280, 1, 0.198, 1, 0.3, false, 0, 12, 0.1));
 
 console.log(packages);
 
@@ -28,11 +28,12 @@ console.log(packageSets);
 
 
 const actionTemplates = [
-    new ActionTemplate({entityName: '', actionName: 'addMainUsers', parmNames: ['newUsersPerCycle']}),
-    // new ActionTemplate({entityName: 'currentCycle', actionName: 'cycleNewUsersBuyAllPacks', parmNames: []})
-    new ActionTemplate({entityName: 'currentCycle', actionName: 'cycleNewUsersBuyDifferentRandomPackSets', parmNames: []}),
-    new ActionTemplate({entityName: 'externalProjects', actionName: 'redeem', parmNames: []}),
-    new ActionTemplate({entityName: '', actionName: 'accruePackProfitToAll', parmNames: []})
+    new ActionTemplate({entityName: '', actionName: 'addMainUsers', parms: ['newUsersPerCycle']}),
+    // new ActionTemplate({entityName: 'currentCycle', actionName: 'cycleNewUsersBuyAllPacks', parms: []})
+    new ActionTemplate({entityName: '', actionName: 'devastatePurchaseQueue', parms: []}),
+    new ActionTemplate({entityName: 'currentCycle', actionName: 'cycleNewUsersBuyDifferentRandomPackSets', parms: []}),
+    new ActionTemplate({entityName: 'externalProjects', actionName: 'redeem', parms: ['redemptionByExternalProjects']}),
+    new ActionTemplate({entityName: '', actionName: 'accruePackProfitToAll', parms: []})
 ]
 
 step = 0.001;
@@ -40,12 +41,12 @@ tokenPrice = 0.01;
 split = 1000;
 startTokenCount = 100000000;
 totalTokensRemain = startTokenCount;
-redemptionByExternalProjects = 100000;
+redemptionByExternalProjects = 1000;
 transactionLogging = true;
 
 const goal = {
     // userCount: 1000,
-    // cyclesCount: 1,
+    // cyclesCount: 4,
     moneyEarned: 20000000,
     tokensSold: startTokenCount
 }
@@ -68,13 +69,16 @@ const options = {
             values: [500, 600, 700],
         }
     },
+    redemptionByExternalProjects: {
+        value: getTokensForExtProjectsCount
+    },
     packageSets: [10, 30, 70],
     actionTemplates: actionTemplates,
     listeners: [
         // new ChangeListener(eventTypeName, triggerValue, handler, ...args)
         new ChangeListener('changed split', eventTypes.price.name, 0.012, change, 'split', 'add', -500),
-        new ChangeListener('changed redemptionByExternalProjects1', eventTypes.price.name, 0.011, change, 'redemptionByExternalProjects', 'add', -50000),
-        new ChangeListener('changed redemptionByExternalProjects2', eventTypes.sales.name, 10000, change, 'redemptionByExternalProjects', 'assign', 10000),
+        new ChangeListener('changed redemptionByExternalProjects', eventTypes.price.name, 0.011, change, 'redemptionByExternalProjects', 'add', -500),
+        new ChangeListener('changed redemptionByExternalProjects', eventTypes.sales.name, 10000, change, 'redemptionByExternalProjects', 'assign', 600),
         new ChangeListener('turned off burn coef', eventTypes.price.name, 0.012, turnOffBurn),
         // new ChangeListener(eventTypes.price.name, 0.011, activatePackage, 640),
         // new ChangeListener(eventTypes.price.name, 0.015, changeSplit, 'assign', 4000),

@@ -41,7 +41,7 @@ const getRandomPackageId = () => {
 }
 
 class UserPackage {
-    constructor(pack, purchasedTokens) {
+    constructor(pack, purchasedTokens = 0) {
         this.origin = pack;
         this.purchasedTokens = purchasedTokens;
         this.periodsLeft = pack.periodsAmount;

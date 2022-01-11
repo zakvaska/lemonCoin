@@ -56,7 +56,7 @@ class Cycle {
         this.status = 'open';
         this.startTokenPrice = tokenPrice;
         this.tokensSoldStart = globalTokensIssued;
-        this.internalSwapStart = getSwapTotal();
+        this.internalSwapStart = globalInternalSwap;
         this.tokensToBurnStart = getBurnTotal();
         this.tokensPaidOutStart = globalTokensPaidOut;
         this.redemptionCompansationStart = globalRedemptionCompansation;
@@ -69,7 +69,7 @@ class Cycle {
         this.endTokenPrice = tokenPrice;
         this.tokensSoldEnd = globalTokensIssued;
         this.tokensSold = this.tokensSoldEnd - this.tokensSoldStart;
-        this.internalSwapEnd = getSwapTotal();
+        this.internalSwapEnd = globalInternalSwap;
         this.internalSwapDiff = this.internalSwapEnd - this.internalSwapStart;
         this.tokensToBurnEnd = getBurnTotal();
         this.tokensToBurnDiff = this.tokensToBurnEnd - this.tokensToBurnStart;
@@ -79,6 +79,7 @@ class Cycle {
         this.redemptionCompansationEnd = globalRedemptionCompansation;
         this.redemptionCompansationDiff = this.redemptionCompansationEnd - this.redemptionCompansationStart;
         if (isFirstCycle) isFirstCycle = false;
+        if (purchaseQueue.size > 0 && this.index > 1) console.warn(`Warning: ${purchaseQueue.size} users has not been devastated in cycle ${this.index}`);
         return this;
     }
 
@@ -97,7 +98,7 @@ class Cycle {
         this.users.forEach((user) => {
             user.buyAllPacks();
         });
-        this.queueSize = queue.size;
+        this.queueSize = salesQueue.size;
     }
 
     cycleNewUsersBuyOneRandomPackSetForAll = () => {
@@ -107,7 +108,7 @@ class Cycle {
         this.users.forEach((user) => {
             user.buyPackageSet(packageSet);
         });
-        this.queueSize = queue.size;
+        this.queueSize = salesQueue.size;
     }
 
     cycleNewUsersBuyDifferentRandomPackSets = () => {
@@ -132,6 +133,6 @@ class Cycle {
         // } catch (error) {
         //     console.error(error);
         // }
-        this.queueSize = queue.size;
+        this.queueSize = salesQueue.size;
     }
 }
