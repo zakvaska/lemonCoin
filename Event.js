@@ -9,8 +9,13 @@ class Event {
     }
 
     informListeners() {
-        const interestedListeners = currentOptions[`${this.type}Listeners`]
-        .filter((listener) => listener.triggerValue === this.newValue);
+        // const interestedListeners = currentOptions[`${this.type}Listeners`]
+        const interestedListeners = currentOptions.listeners
+        .filter((listener) => 
+            listener.triggerValue <= this.newValue 
+            && listener.eventType === this.type 
+            && !listener.executed
+        );
         // console.log(currentOptions[`${this.type}Listeners`]);
         // console.log(currentOptions[`${this.type}Listeners`][0].triggerValue);
         // console.log(this.newValue);
@@ -18,5 +23,6 @@ class Event {
 
         interestedListeners.forEach((listener) => listener.executeAction());
         this.informedListener = interestedListeners;
+        if (interestedListeners.length) this.healthy = true;
     }
 }

@@ -9,7 +9,7 @@ let globalTurnover = 0;
 let globalIterationCoef = 0;
 let globalTransCount = 0;
 let globalTokensIssued = 0;
-let globalTokensSold = 0;
+var globalTokensSold = 0;
 let globalTokensPaidOut = 0;
 let globalRedemptionCompansation = 0;
 
@@ -66,7 +66,14 @@ const returnedValues = {
 };
 
 const eventTypes = {
-    price: 'onPriceChange'
+    price: {
+        name: 'price',
+        variable: 'tokenPrice'
+    },
+    sales: {
+        name: 'sales',
+        variable: 'globalTokensSold'
+    }
 }
 
 class ExternalProjects {
@@ -80,19 +87,19 @@ class ExternalProjects {
     redeem() {
         const tokensAmount = redemptionByExternalProjects / tokenPrice;
         const diff = redeemTokensFromSwap(tokensAmount, externalProjects);
-        if (diff > 0) {
-            registerTransaction(system, externalProjects, diff, 'token', 'redemptionCompensation');
-            globalMoneyBank += diff * tokenPrice;
-            globalTurnover += diff * tokenPrice;
-            globalTokensIssued += diff;
-            globalTokensSold += diff;
-            globalTransCount++;
-            totalTokensRemain -= diff;
-            globalRedemptionCompansation += diff;
+        // if (diff > 0) {
+        //     registerTransaction(system, externalProjects, diff, 'token', 'redemptionCompensation');
+        //     globalMoneyBank += diff * tokenPrice;
+        //     globalTurnover += diff * tokenPrice;
+        //     globalTokensIssued += diff;
+        //     globalTokensSold += diff;
+        //     globalTransCount++;
+        //     totalTokensRemain -= diff;
+        //     globalRedemptionCompansation += diff;
 
-            currentTest.current.moneyEarned += diff * tokenPrice;
-        }
-        externalProjects.tokensPurchased += tokensAmount;
+        //     currentTest.current.moneyEarned += diff * tokenPrice;
+        // }
+        // externalProjects.tokensPurchased += tokensAmount;
 
         // console.log('redeem');
         // console.log(this);

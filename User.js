@@ -48,9 +48,6 @@ class User {
                 //internal swap summary is not enough to supplement package purchase
                 if (diff > 0) {
                     tokensFromSystem += diff;
-                    // globalTokensIssued += diff;
-                    // globalTokensSold += diff;
-                    // totalTokensRemain -= diff;
                     globalRedemptionCompansation += diff;
                     registerTransaction(system, this, diff, 'token', 'redemptionCompensation');
                 }
@@ -61,6 +58,7 @@ class User {
             globalTransCount++;
             globalTokensIssued += tokensFromSystem;
             globalTokensSold += tokensFromSystem;
+            new Event(eventTypes.sales.name, round3(globalTokensSold));
             totalTokensRemain -= tokensFromSystem;
 
             currentTest.current.moneyEarned += tokensFromSystem * tokenPrice;
