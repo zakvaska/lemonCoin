@@ -13,7 +13,7 @@ class ExternalProjects {
             // console.log(tokensAmount);
             const diff = redeemTokensFromSwap(tokensToRedeem, externalProjects);
             if (diff > 0) {
-                console.log('add ext projects to purchase queue');
+                // console.log('add ext projects to purchase queue');
                 purchaseQueue.add(this);
                 this.deferredTokens += diff;
                 return this.deferredTokens;

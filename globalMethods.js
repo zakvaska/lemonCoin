@@ -149,7 +149,7 @@ var accruePackProfitToAll = () => {
 const accruePackProfit = (user) => {
     
     // console.log(user);
-    user.packages.forEach((package, index, array) => {
+    user.purchasedPackages.forEach((package, index, array) => {
         if (!package.isProfitPaidOut) {
             // console.log('accruePackProfitToUser');
             // const moneyProfit = package.origin.price * package.origin.profitRate;
@@ -374,7 +374,7 @@ const turnOffBurn = () => {
 var devastatePurchaseQueue = () => {
     if (purchaseQueue.size) {    
         // console.log(purchaseQueue.size);
-        console.log('devastate on cycle ' + currentCycle.index);
+        // console.log('devastate on cycle ' + currentCycle.index);
         const purchaseQueueIterator = purchaseQueue.values();
         let firstEntityInQueue = purchaseQueueIterator.next().value;
         // firstEntityInQueue = iterator.next().value;//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -383,31 +383,61 @@ var devastatePurchaseQueue = () => {
             const deferredTokens = firstEntityInQueue.redeem(firstEntityInQueue.deferredTokens);
             if (deferredTokens === 0) {
                 purchaseQueue.delete(firstEntityInQueue);
-                console.log('delete');
+                // console.log('delete');
                 globalInternalSwap && devastatePurchaseQueue();
             } else {
                 return;
             }
         } else if (firstEntityInQueue instanceof User) {
-            console.log(firstEntityInQueue);
-            firstEntityInQueue.deferredPackages.forEach((package, index, array) => {
-                const success = firstEntityInQueue.buyPackage(package.origin);
-                console.log(success);
-                if (success) array.shift();
-            });
-            if (!firstEntityInQueue.deferredPackages.length) {
+            // console.log(firstEntityInQueue);
+            const deferredPackagesIterator = firstEntityInQueue.deferredPackages.values();
+            let defferedPackage;
+            let success = true;
+            while (firstEntityInQueue.deferredPackages.size && success) {
+                defferedPackage = deferredPackagesIterator.next().value;
+                success = firstEntityInQueue.buyPackage(defferedPackage);
+                // console.log((defferedPackage.price / tokenPrice) * defferedPackage.bonus * defferedPackage.redeemFromSwap);
+                // console.log(globalInternalSwap);
+                // console.log(success);
+                if (success) {
+                    firstEntityInQueue.deferredPackages.delete(defferedPackage);
+                    // console.log('shift');
+                    // console.log(array);
+                }
+            }
+            // firstEntityInQueue.deferredPackages.forEach((package, index, array) => {
+            //     const success = firstEntityInQueue.buyPackage(package);
+            //     // console.log((package.origin.price / tokenPrice) * package.bonus);
+            //     // console.log((package.price / tokenPrice) * package.bonus * package.redeemFromSwap);
+            //     // console.log(globalInternalSwap);
+            //     console.log(success);
+            //     if (success) {
+            //         array.shift();
+            //         console.log('shift');
+            //         // console.log(array);
+            //     }
+            // });
+            if (!firstEntityInQueue.deferredPackages.size) {
                 purchaseQueue.delete(firstEntityInQueue);
-                console.log('devastate user');
-                console.log(globalInternalSwap);
+                // console.log('devastate user');
+                // console.log(globalInternalSwap);
                 globalInternalSwap && devastatePurchaseQueue();
             } else return;
         }
     }
 }
 
+var checkDevastation = () => {
+    if (purchaseQueue.size > 0) console.warn(`Warning: ${purchaseQueue.size} users have not been devastated in cycle ${currentCycle.index}`);
+}
+
 const checkPackPurchasePossibility = (package) => {
+    // console.log(package);
     const tokensFromSwap = (package.price / tokenPrice) * package.bonus * package.redeemFromSwap;
-    return isFirstCycle || package.canBeBought && tokensFromSwap <= globalInternalSwap;
+    // return package.canBeBought && (tokensFromSwap <= globalInternalSwap || isFirstCycle);
+    if (!package.canBeBought) return `can't be bought`;
+    if (!(tokensFromSwap <= globalInternalSwap || isFirstCycle)) return 'not enough tokens in internal swap';
+    return '';
 }
 
 const getTokensForExtProjectsCount = () => redemptionByExternalProjects / tokenPrice;

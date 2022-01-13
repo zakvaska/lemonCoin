@@ -79,7 +79,6 @@ class Cycle {
         this.redemptionCompansationEnd = globalRedemptionCompansation;
         this.redemptionCompansationDiff = this.redemptionCompansationEnd - this.redemptionCompansationStart;
         if (isFirstCycle) isFirstCycle = false;
-        if (purchaseQueue.size > 0 && this.index > 1) console.warn(`Warning: ${purchaseQueue.size} users has not been devastated in cycle ${this.index}`);
         return this;
     }
 

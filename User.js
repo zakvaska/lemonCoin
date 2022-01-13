@@ -8,7 +8,6 @@ class User {
         this.moneyIncome = 0;
         this.refferalCount = 0;
         this.parentRef = parent;
-        this.packages = [];
         this.tokenAmount = 0;
         this.purchasedTokens = 0;
         this.profitTokens = 0;
@@ -18,12 +17,14 @@ class User {
         this.transactionHistory = [];
         this.id = ++lastID;
         this.packageHistory = [];
-        this.packageSets = [];
         this.profitPaymentsCount = 0;
         this.redeemedTokens = 0;
         this.unlockedTokens = 0;
         this.unlocksCount = 0;
-        this.deferredPackages = [];
+        // this.desiredPackageSets = [];
+        this.packageSets = [];
+        this.deferredPackages = new Set();
+        this.purchasedPackages = [];
     }
 
     buyPackage(currentPack, log) {
@@ -31,10 +32,11 @@ class User {
             console.log(checkPackPurchasePossibility(currentPack));
             console.log(currentPack);
         }
-        if (!checkPackPurchasePossibility(currentPack)){
-            // console.log('purchase denied');
-            this.deferredPackages.push(new UserPackage(currentPack));
+        const reason = checkPackPurchasePossibility(currentPack);
+        if (!!reason) {
+            this.deferredPackages.add(currentPack);
             purchaseQueue.add(this);
+            // console.log('purchase denied');
             return false;
         }    
         const packPrice = currentPack.price;     
@@ -42,7 +44,7 @@ class User {
         this.moneySpent += packPrice;
         const purchasedTokens = (packPrice / tokenPrice) * currentPack.bonus;
 
-        this.packages.push(new UserPackage(currentPack, purchasedTokens));
+        this.purchasedPackages.push(new UserPackage(currentPack, purchasedTokens));
         this.tokenAmount += purchasedTokens;
         this.purchasedTokens += purchasedTokens;
         // this.internalSwap += purchasedTokens * currentPack.swapCoef;
@@ -96,7 +98,7 @@ class User {
     
     //with progression
     buyAllPacks() {
-        packages.forEach((pack) => {
+        purchasedPackages.forEach((pack) => {
             this.buyPackage(pack); 
         });              
     }
@@ -104,6 +106,7 @@ class User {
     buyPackageSet(lastPackageInSetPrice) {
         // const packageSet = packages.filter((userPackage) => userPackage.origin.price <= lastPackageInSetPrice);
         const packageSet = packageSets[lastPackageInSetPrice];
+        // this.desiredPackageSets.push(new UserPackSet(packageSet));
         packageSet.forEach((pack) => this.buyPackage(pack));
         this.packageSets.push(packageSet);
     }

@@ -41,7 +41,7 @@ const getRandomPackageId = () => {
 }
 
 class UserPackage {
-    constructor(pack, purchasedTokens = 0) {
+    constructor(pack, purchasedTokens = 0, reason) {
         this.origin = pack;
         this.purchasedTokens = purchasedTokens;
         this.periodsLeft = pack.periodsAmount;
@@ -49,6 +49,10 @@ class UserPackage {
         this.isBodyPaidOut = false;
         this.lockedTokens = purchasedTokens;
         this.unlockedTokens = 0;
+        this.tokenPrice = tokenPrice;
+        this.cycle = currentCycle.index;
+        this.isBought = !!purchasedTokens;
+        this.reason = reason;
     }
 
     unlockTokens(amount) {
@@ -57,4 +61,15 @@ class UserPackage {
     }
 }
 
+
+class UserPackSet {
+    constructor(packageSet) {
+        this.origin = packageSet;
+        this.packages = [];
+        this.origin.forEach((pack) => {
+            this.packages.push(pack)
+        })
+        this.isBought = false;
+    }
+}
 
