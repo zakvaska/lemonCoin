@@ -441,3 +441,7 @@ const checkPackPurchasePossibility = (package) => {
 }
 
 const getTokensForExtProjectsCount = () => redemptionByExternalProjects / tokenPrice;
+
+const setProfitRateForAllPacks = (newValue) => {
+    packages.forEach((pack) => pack.setProfitRate(newValue));
+}

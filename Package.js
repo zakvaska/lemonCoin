@@ -17,6 +17,9 @@ class Package {
         this.swapCoef = 1;
         this.burnCoef = 0;
     }
+    setProfitRate(newValue) {
+        this.profitRate = newValue;
+    }
 }
 
 const packages = [

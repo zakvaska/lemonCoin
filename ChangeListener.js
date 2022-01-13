@@ -1,5 +1,5 @@
 class ChangeListener {
-    constructor(message, eventTypeName, triggerValue, handler, ...args) {
+    constructor(message = '', eventTypeName, triggerValue, handler, ...args) {
         this.message = message;
         this.eventType = eventTypeName;
         this.triggerValue = triggerValue;

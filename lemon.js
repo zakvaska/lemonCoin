@@ -81,6 +81,7 @@ const options = {
         new ChangeListener('changed redemptionByExternalProjects', eventTypes.sales.name, 10000, change, 'redemptionByExternalProjects', 'assign', 600),
         new ChangeListener('turned off burn coef', eventTypes.price.name, 0.012, turnOffBurn),
         new ChangeListener('activated package 20', eventTypes.price.name, 0.011, activatePackage, 20),
+        new ChangeListener('set profit rate for all packages', eventTypes.sales.name, 10500, setProfitRateForAllPacks, 0.05),
         // new ChangeListener(eventTypes.price.name, 0.015, changeSplit, 'assign', 4000),
         // new ChangeListener(eventTypes.price.name, 0.015, disablePackageImpactOnPrice, 80),
     ]
