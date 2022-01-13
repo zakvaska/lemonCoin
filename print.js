@@ -5,6 +5,7 @@ console.log('startTokenCount = ' + new Intl.NumberFormat('ru-RU').format(startTo
 console.log('globalTokensIssued = ' + new Intl.NumberFormat('ru-RU').format(globalTokensIssued.toFixed(2)));
 console.log('globalTokensSold = ' + new Intl.NumberFormat('ru-RU').format(globalTokensSold.toFixed(2)));
 console.log('globalTokensPaidOut = ' + new Intl.NumberFormat('ru-RU').format(globalTokensPaidOut.toFixed(2)));
+console.log('globalTokensUnlocked = ' + new Intl.NumberFormat('ru-RU').format(globalTokensUnlocked.toFixed(2)));
 // console.log('globalTokensIssued = ' + globalTokensIssued);
 // console.log('totalTokenPaidProfit = ' + new Intl.NumberFormat('ru-RU').format(totalTokenPaidProfit.toFixed(2)));
 console.log('totalTokensRemain = ' + new Intl.NumberFormat('ru-RU').format(totalTokensRemain.toFixed(2)));

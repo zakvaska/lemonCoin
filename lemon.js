@@ -42,6 +42,7 @@ split = 1000;
 startTokenCount = 100000000;
 totalTokensRemain = startTokenCount;
 redemptionByExternalProjects = 1000;
+extraInternalSwapTokens = 1000;
 transactionLogging = true;
 
 const goal = {

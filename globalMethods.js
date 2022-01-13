@@ -184,7 +184,7 @@ const accruePackProfit = (user) => {
                 tokensToUnlock = package.lockedTokens;
                 package.isBodyPaidOut = true;
             }
-
+            globalTokensUnlocked += tokensToUnlock;
             user.profitTokens += tokensToUnlock;
             // user.internalSwap += profitTokens;
             user.unlockedTokens += tokensToUnlock;

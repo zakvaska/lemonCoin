@@ -12,6 +12,7 @@ let globalTokensIssued = 0;
 var globalTokensSold = 0;
 let globalTokensPaidOut = 0;
 let globalRedemptionCompansation = 0;
+let globalTokensUnlocked = 0;
 
 let totalPackPurchases = 0;
 // let stageTokensSold = 0;
@@ -19,6 +20,7 @@ let lastStageTokensSold = 0;
 let globalRedeemedTokens = 0;
 let usersRedemptionProfit = 0;
 let globalInternalSwap = 0;
+var extraInternalSwapTokens;
 
 // let totalTokenPaidProfit = 0;
 

@@ -60,6 +60,7 @@ class Cycle {
         this.tokensToBurnStart = getBurnTotal();
         this.tokensPaidOutStart = globalTokensPaidOut;
         this.redemptionCompansationStart = globalRedemptionCompansation;
+        globalInternalSwap += extraInternalSwapTokens;
         return this;
     }
 
