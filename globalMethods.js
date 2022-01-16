@@ -310,6 +310,13 @@ const change = (variable, action, payload) => {
             break;
         case 'add':
             window[variable] += payload;
+            break;
+        case 'multiply':
+            window[variable] *= payload;
+            break;
+        default:
+            throw new Error('inappropriate action provided');
+            break;
     }
 }
 
