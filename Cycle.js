@@ -60,6 +60,8 @@ class Cycle {
         this.tokensToBurnStart = getBurnTotal();
         this.tokensPaidOutStart = globalTokensPaidOut;
         this.redemptionCompansationStart = globalRedemptionCompansation;
+        this.moneyBankStart = globalMoneyBank;
+        this.tokensUnlockedStart = globalTokensUnlocked;
         globalInternalSwap += extraInternalSwapTokens;
         return this;
     }
@@ -79,6 +81,10 @@ class Cycle {
         this.tokensPaidOutDiff = this.tokensPaidOutEnd - this.tokensPaidOutStart;
         this.redemptionCompansationEnd = globalRedemptionCompansation;
         this.redemptionCompansationDiff = this.redemptionCompansationEnd - this.redemptionCompansationStart;
+        this.moneyBankEnd = globalMoneyBank;
+        this.moneyBankDiff = this.moneyBankEnd - this.moneyBankStart;
+        this.tokensUnlockedEnd = globalTokensUnlocked;
+        this.tokensUnlockedDiff = this.tokensUnlockedEnd - this.tokensUnlockedStart;
         if (isFirstCycle) isFirstCycle = false;
         return this;
     }

@@ -193,6 +193,8 @@ const accruePackProfit = (user) => {
             user.tokensToBurn += tokensToUnlock * package.origin.burnCoef;
 
             user.unlocksCount++;
+
+            globalInternalSwap += tokensToUnlock;
         }
         
         // totalTokenPaidProfit += tokenProfit;
